@@ -108,6 +108,7 @@ class SampleGUIClientWindow(QMainWindow):
         self.client.handleUnknownMessage(self.onUnknownMessage)
         self.client.addHandler(SCCPMessageType.RegisterAckMessage,self.onRegisteredAck)
         self.client.addHandler(SCCPMessageType.CapabilitiesReqMessage,self.onCapabilitiesReq)
+        self.client.addHandler(SCCPMessageType.KeepAliveAckMessage,self.onKeepAliveAck)
         
     
     def on_doit(self):
@@ -128,15 +129,20 @@ class SampleGUIClientWindow(QMainWindow):
         self.log("               dateTemplate : " + `registerAck.dateTemplate`)
         self.log(" secondaryKeepAliveInterval : " + `registerAck.secondaryKeepAliveInterval`)
 #        self.sendKeepAlive()
-#        self.keepalive_timer = QTimer(self)
-#        self.keepalive_timer.timeout.connect(self.sendKeepAlive)
-#        self.keepalive_timer.start(3000)
+        self.keepalive_timer = QTimer(self)
+        self.keepalive_timer.timeout.connect(self.sendKeepAlive)
+        self.keepalive_timer.start(registerAck.keepAliveInterval*1000)
     
     def onCapabilitiesReq(self,message):
         self.log("on capabilities request")
         capabilities = SCCPCapabilitiesRes()
         self.client.send_msg(capabilities.pack())
-
+        message = SCCPMessage(SCCPMessageType.TimeDateReqMessage)
+        self.client.send_msg(message.pack())
+        
+    def onKeepAliveAck(self,message):
+        self.log("Keepalive ack")
+  
     def sendKeepAlive(self):
         self.log("sending keepalive")
         message = SCCPMessage(SCCPMessageType.KeepAliveMessage)
@@ -155,7 +161,7 @@ class SampleGUIClientWindow(QMainWindow):
         #self.connection.disconnect()
         
     def onUnknownMessage(self,message):
-        self.log('receive unkown message ' + str(message.sccpmessageType))
+        self.log('receive unkown message ' + message.toStr())
         
     def log(self, msg):
         timestamp = '[%010.3f]' % time.clock()

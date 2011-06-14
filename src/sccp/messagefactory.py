@@ -9,6 +9,7 @@ from sccp.sccpmessagetype import SCCPMessageType
 from sccp.sccpregisterack import SCCPRegisterAck
 from sccp.sccpmessage import SCCPMessage
 from sccp.sccpcapabilitiesreq import SCCPCapabilitiesReq
+from sccp.sccpkeepaliveack import SCCPKeepAliveAck
 
 class MessageFactory():
     '''
@@ -24,4 +25,6 @@ class MessageFactory():
             msg = SCCPRegisterAck()
         if (messageType == SCCPMessageType.CapabilitiesReqMessage):
             msg = SCCPCapabilitiesReq()
+        if (messageType == SCCPMessageType.KeepAliveAckMessage):
+            msg = SCCPKeepAliveAck()
         return msg

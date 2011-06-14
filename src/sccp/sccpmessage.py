@@ -19,3 +19,6 @@ class SCCPMessage:
     
     def unPack(self,buffer):
         self.buffer = buffer
+        
+    def toStr(self):
+        return "SCCPMessage : " + hex(self.sccpmessageType)

@@ -55,5 +55,6 @@ class SCCPClientFactory(ClientFactory):
                 self.messageHandlers[self.UNKNOWN_KEY](message)
             else:
                 print "ERROR unknown message "+str(message.sccpmessageType) +" no handler"
-                
+               
+     
 
