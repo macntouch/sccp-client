@@ -17,6 +17,7 @@ from sccp.sccpmessagetype import SCCPMessageType
 import struct
 from sccp.sccpregister import SCCPRegister
 from network.sccpclientfactory import SCCPClientFactory
+from sccp.sccpcapabilities import SCCPCapabilitiesRes
 
 SERVER_HOST = '192.168.30.83'
 SERVER_PORT = 2000
@@ -108,8 +109,6 @@ class SampleGUIClientWindow(QMainWindow):
         self.client.addHandler(SCCPMessageType.RegisterAckMessage,self.onRegisteredAck)
         self.client.addHandler(SCCPMessageType.CapabilitiesReqMessage,self.onCapabilitiesReq)
         
-    def onCapabilitiesReq(self,message):
-        self.log("on capabilities request")
     
     def on_doit(self):
         self.log('Connecting...')
@@ -133,6 +132,11 @@ class SampleGUIClientWindow(QMainWindow):
 #        self.keepalive_timer.timeout.connect(self.sendKeepAlive)
 #        self.keepalive_timer.start(3000)
     
+    def onCapabilitiesReq(self,message):
+        self.log("on capabilities request")
+        capabilities = SCCPCapabilitiesRes()
+        self.client.send_msg(capabilities.pack())
+
     def sendKeepAlive(self):
         self.log("sending keepalive")
         message = SCCPMessage(SCCPMessageType.KeepAliveMessage)
