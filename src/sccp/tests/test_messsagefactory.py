@@ -6,6 +6,7 @@ Created on Jun 14, 2011
 import unittest
 from sccp.messagefactory import MessageFactory
 from sccp.sccpregisterack import SCCPRegisterAck
+from sccp.sccpcapabilitiesreq import SCCPCapabilitiesReq
 
 
 class TestMessageFactory(unittest.TestCase):
@@ -15,10 +16,17 @@ class TestMessageFactory(unittest.TestCase):
 
     def testCreateRegisterAck(self):
         receivedBuffer = "\x00\x00\x00\x00\x81\x00\x00\x00\x00\x0b\x00\x00"
-        
+    
         msg = self.messageFactory.create(receivedBuffer)
         
         self.assertTrue(isinstance(msg, SCCPRegisterAck))
+
+    def testCreateCapabilitiesReq(self):
+        receivedBuffer = "\x00\x00\x00\x00\x9b\x00\x00\x00\x00\x0b\x00\x00"
+    
+        msg = self.messageFactory.create(receivedBuffer)
+        
+        self.assertTrue(isinstance(msg, SCCPCapabilitiesReq))
         
     def testCreateUnkownType(self):
         receivedBuffer = "\x00\x00\x00\x00\xFF\xFF\x00\x00\x00\x0b\x00\x00"

@@ -8,13 +8,12 @@ from struct import unpack
 from sccp.sccpmessagetype import SCCPMessageType
 from sccp.sccpregisterack import SCCPRegisterAck
 from sccp.sccpmessage import SCCPMessage
+from sccp.sccpcapabilitiesreq import SCCPCapabilitiesReq
 
 class MessageFactory():
     '''
     sccp message factory create message from received buffer
     '''
-
-
     def __init__(self):
         '''
         '''
@@ -23,4 +22,6 @@ class MessageFactory():
         msg = SCCPMessage(messageType)
         if (messageType == SCCPMessageType.RegisterAckMessage):
             msg = SCCPRegisterAck()
+        if (messageType == SCCPMessageType.CapabilitiesReqMessage):
+            msg = SCCPCapabilitiesReq()
         return msg
