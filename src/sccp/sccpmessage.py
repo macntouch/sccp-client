@@ -16,3 +16,6 @@ class SCCPMessage:
         
     def pack(self):
         return struct.pack("LL",self.reserved,self.sccpmessageType)
+    
+    def unPack(self,buffer):
+        self.buffer = buffer

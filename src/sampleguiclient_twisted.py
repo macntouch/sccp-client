@@ -108,7 +108,7 @@ class SampleGUIClientWindow(QMainWindow):
         self.client.addHandler(SCCPMessageType.RegisterAckMessage,self.onRegisteredAck)
         self.client.addHandler(SCCPMessageType.CapabilitiesReqMessage,self.onCapabilitiesReq)
         
-    def onCapabilitiesReq(self):
+    def onCapabilitiesReq(self,message):
         self.log("on capabilities request")
     
     def on_doit(self):
@@ -123,8 +123,11 @@ class SampleGUIClientWindow(QMainWindow):
         registerMessage = SCCPRegister("SEP00164697AAAA", "192.168.30.83")
         self.client.send_msg(registerMessage.pack())
     
-    def onRegisteredAck(self):
+    def onRegisteredAck(self,registerAck):
         self.log("sccp phone registered")
+        self.log("          keepAliveInterval : " + `registerAck.keepAliveInterval`)
+        self.log("               dateTemplate : " + `registerAck.dateTemplate`)
+        self.log(" secondaryKeepAliveInterval : " + `registerAck.secondaryKeepAliveInterval`)
 #        self.sendKeepAlive()
 #        self.keepalive_timer = QTimer(self)
 #        self.keepalive_timer.timeout.connect(self.sendKeepAlive)

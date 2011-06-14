@@ -39,6 +39,7 @@ class SCCPClientProtocol(IntNStringReceiver):
 
     def stringReceived(self, s):    
         message = self.messageFactory.create(s)
+        message.unPack(s[8:])
         self.factory.handleMessage(message)
 
         #self.factory.got_msg(s);
