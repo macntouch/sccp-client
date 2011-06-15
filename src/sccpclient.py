@@ -17,6 +17,7 @@ import struct
 from sccp.sccpregister import SCCPRegister
 from network.sccpclientfactory import SCCPClientFactory
 from sccp.sccpcapabilities import SCCPCapabilitiesRes
+from sccp.sccpregisteravailablelines import SCCPRegisterAvailableLines
 
 SERVER_HOST = '192.168.30.83'
 SERVER_PORT = 2000
@@ -67,6 +68,8 @@ class LogWidget(QTextBrowser):
         palette = QPalette()
         palette.setColor(QPalette.Base, QColor("#ddddfd"))
         self.setPalette(palette)
+    def minimumSizeHint(self, *args, **kwargs):
+        return QSize(400,400)
 
 
 class SCCPClientWindow(QMainWindow):
@@ -78,7 +81,15 @@ class SCCPClientWindow(QMainWindow):
         self.create_client()
         self.create_timer()
 
+    def create_time_box(self):
+        timeBox = QHBoxLayout()
+        self.timeDateLabel = QLabel()
+        timeBox.addWidget(self.timeDateLabel)
+        return timeBox        
+
     def create_main_frame(self):
+       
+        
         self.circle_widget = CircleWidget()
         self.doit_button = QPushButton('Connect !')
         self.doit_button.clicked.connect(self.on_doit)
@@ -91,6 +102,7 @@ class SCCPClientWindow(QMainWindow):
         self.deviceNameEdit.setText(DEVICE_NAME)
         
         hbox = QVBoxLayout()
+        hbox.addLayout(self.create_time_box())
         hbox.addWidget(self.circle_widget)
         
         hostBox = QHBoxLayout()
@@ -105,6 +117,7 @@ class SCCPClientWindow(QMainWindow):
         hbox.addWidget(self.doit_button)
         hbox.addWidget(self.log_widget)
 
+        self.timeDateLabel.setText("...................")
                 
         main_frame = QWidget()
         main_frame.setLayout(hbox)
@@ -131,6 +144,7 @@ class SCCPClientWindow(QMainWindow):
         self.client.addHandler(SCCPMessageType.RegisterAckMessage,self.onRegisteredAck)
         self.client.addHandler(SCCPMessageType.CapabilitiesReqMessage,self.onCapabilitiesReq)
         self.client.addHandler(SCCPMessageType.KeepAliveAckMessage,self.onKeepAliveAck)
+        self.client.addHandler(SCCPMessageType.DefineTimeDate,self.onDefineTimeDate)
         
     
     def on_doit(self):
@@ -158,14 +172,28 @@ class SCCPClientWindow(QMainWindow):
     
     def onCapabilitiesReq(self,message):
         self.log("On capabilities request")
+        self.log("sending capabilities response")
         capabilities = SCCPCapabilitiesRes()
         self.client.send_msg(capabilities.pack())
+        self.log("sending button template request message")
+        message = SCCPMessage(SCCPMessageType.ButtonTemplateReqMessage)
+        self.client.send_msg(message.pack())        
+        self.log("sending register available lines")
+        message=SCCPRegisterAvailableLines()
+        self.client.send_msg(message.pack())
+        self.log("sending time date request message")
         message = SCCPMessage(SCCPMessageType.TimeDateReqMessage)
         self.client.send_msg(message.pack())
         
     def onKeepAliveAck(self,message):
         self.log("Keepalive ack")
   
+    def onDefineTimeDate(self,message):
+        self.log('define time and date')
+        self.timeDateLabel.setText(`message.day` + '-'+`message.month` + '-' + `message.year` 
+                                   + ' ' +`message.hour`+':'+`message.minute`+':'+`message.seconds`)
+
+    
     def sendKeepAlive(self):
         self.log("sending keepalive")
         message = SCCPMessage(SCCPMessageType.KeepAliveMessage)
