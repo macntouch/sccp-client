@@ -11,7 +11,6 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from struct import pack
 
-from twistedclient import SocketClientFactory
 from sccp.sccpmessage import SCCPMessage
 from sccp.sccpmessagetype import SCCPMessageType
 import struct
@@ -21,6 +20,7 @@ from sccp.sccpcapabilities import SCCPCapabilitiesRes
 
 SERVER_HOST = '192.168.30.83'
 SERVER_PORT = 2000
+DEVICE_NAME= 'SEP00164697AAAA'
 
 
 class CircleWidget(QWidget):
@@ -34,7 +34,7 @@ class CircleWidget(QWidget):
         return QSize(50, 50)
 
     def sizeHint(self):
-        return QSize(180, 180)
+        return QSize(50, 50)
 
     def next(self):
         self.nframe += 1
@@ -45,7 +45,7 @@ class CircleWidget(QWidget):
         painter.setRenderHint(QPainter.Antialiasing, True)
         painter.translate(self.width() / 2, self.height() / 2)
 
-        for diameter in range(0, 64, 9):
+        for diameter in range(0, 32, 9):
             delta = abs((self.nframe % 64) - diameter / 2)
             alpha = 255 - (delta * delta) / 4 - diameter
             if alpha > 0:
@@ -76,17 +76,35 @@ class SampleGUIClientWindow(QMainWindow):
 
     def create_main_frame(self):
         self.circle_widget = CircleWidget()
-        self.doit_button = QPushButton('Do it!')
+        self.doit_button = QPushButton('Connect !')
         self.doit_button.clicked.connect(self.on_doit)
         self.log_widget = LogWidget()
+        hostLabel = QLabel("Host : ")
+        self.hostEdit = QLineEdit()
+        self.hostEdit.setText(SERVER_HOST)
+        deviceNameLabel = QLabel("Phone Set : ")
+        self.deviceNameEdit = QLineEdit()
+        self.deviceNameEdit.setText(DEVICE_NAME)
         
-        hbox = QHBoxLayout()
+        hbox = QVBoxLayout()
         hbox.addWidget(self.circle_widget)
+        
+        hostBox = QHBoxLayout()
+        hostBox.addWidget(hostLabel)
+        hostBox.addWidget(self.hostEdit)
+        hbox.addLayout(hostBox)
+        deviceBox = QHBoxLayout()
+        deviceBox.addWidget(deviceNameLabel)
+        deviceBox.addWidget(self.deviceNameEdit)
+        hbox.addLayout(deviceBox)
+
         hbox.addWidget(self.doit_button)
         hbox.addWidget(self.log_widget)
-        
+
+                
         main_frame = QWidget()
         main_frame.setLayout(hbox)
+        main_frame.setMinimumWidth(400)
         
         self.setCentralWidget(main_frame)
         
@@ -112,15 +130,15 @@ class SampleGUIClientWindow(QMainWindow):
         
     
     def on_doit(self):
-        self.log('Connecting...')
-        # When the connection is made, self.client calls the on_client_connect
-        # callback.
-        #
-        self.connection = self.reactor.connectTCP(SERVER_HOST, SERVER_PORT, self.client)
+       
+        serverHost = str(self.hostEdit.text())
+        self.log("trying to connect to : "+serverHost+ " on " +`SERVER_PORT`)
+        self.connection = self.reactor.connectTCP(serverHost, SERVER_PORT, self.client)
 
     def on_client_connect_success(self):
-        self.log('Connected to server. Sending register')
-        registerMessage = SCCPRegister("SEP00164697AAAA", "192.168.30.83")
+        deviceName = str(self.deviceNameEdit.text())
+        self.log('Connected to server. Sending register with phone set : ' + deviceName)
+        registerMessage = SCCPRegister(deviceName, "192.168.30.84")
         self.client.send_msg(registerMessage.pack())
     
     def onRegisteredAck(self,registerAck):
