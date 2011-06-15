@@ -29,6 +29,7 @@ class CircleWidget(QWidget):
         self.nframe = 0
         self.setBackgroundRole(QPalette.Base)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.connected = False
 
     def minimumSizeHint(self):
         return QSize(50, 50)
@@ -49,7 +50,10 @@ class CircleWidget(QWidget):
             delta = abs((self.nframe % 64) - diameter / 2)
             alpha = 255 - (delta * delta) / 4 - diameter
             if alpha > 0:
-                painter.setPen(QPen(QColor(0, diameter / 2, 127, alpha), 3))
+                if (self.connected):
+                    painter.setPen(QPen(QColor(0, 192, 0, alpha), 3))
+                else:    
+                    painter.setPen(QPen(QColor(255, 0, 0, alpha), 3))
                 painter.drawEllipse(QRectF(
                     -diameter / 2.0,
                     -diameter / 2.0, 
@@ -65,9 +69,9 @@ class LogWidget(QTextBrowser):
         self.setPalette(palette)
 
 
-class SampleGUIClientWindow(QMainWindow):
+class SCCPClientWindow(QMainWindow):
     def __init__(self, reactor, parent=None):
-        super(SampleGUIClientWindow, self).__init__(parent)
+        super(SCCPClientWindow, self).__init__(parent)
         self.reactor = reactor
         
         self.create_main_frame()
@@ -150,6 +154,7 @@ class SampleGUIClientWindow(QMainWindow):
         self.keepalive_timer = QTimer(self)
         self.keepalive_timer.timeout.connect(self.sendKeepAlive)
         self.keepalive_timer.start(registerAck.keepAliveInterval*1000)
+        self.circle_widget.connected = True
     
     def onCapabilitiesReq(self,message):
         self.log("on capabilities request")
@@ -202,7 +207,7 @@ if __name__ == "__main__":
     qt4reactor.install()
     
     from twisted.internet import reactor
-    mainwindow = SampleGUIClientWindow(reactor)
+    mainwindow = SCCPClientWindow(reactor)
     mainwindow.show()
     
     reactor.run()
