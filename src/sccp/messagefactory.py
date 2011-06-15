@@ -10,6 +10,7 @@ from sccp.sccpregisterack import SCCPRegisterAck
 from sccp.sccpmessage import SCCPMessage
 from sccp.sccpcapabilitiesreq import SCCPCapabilitiesReq
 from sccp.sccpkeepaliveack import SCCPKeepAliveAck
+from sccp.sccpdefinetimedate import SCCPDefineTimeDate
 
 class MessageFactory():
     '''
@@ -27,4 +28,6 @@ class MessageFactory():
             msg = SCCPCapabilitiesReq()
         if (messageType == SCCPMessageType.KeepAliveAckMessage):
             msg = SCCPKeepAliveAck()
+        if (messageType ==  SCCPMessageType.DefineTimeDate):
+            msg = SCCPDefineTimeDate()
         return msg

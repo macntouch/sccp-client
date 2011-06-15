@@ -8,6 +8,7 @@ from sccp.messagefactory import MessageFactory
 from sccp.sccpregisterack import SCCPRegisterAck
 from sccp.sccpcapabilitiesreq import SCCPCapabilitiesReq
 from sccp.sccpkeepaliveack import SCCPKeepAliveAck
+from sccp.sccpdefinetimedate import SCCPDefineTimeDate
 
 
 class TestMessageFactory(unittest.TestCase):
@@ -35,6 +36,13 @@ class TestMessageFactory(unittest.TestCase):
         msg = self.messageFactory.create(receivedBuffer)
         
         self.assertTrue(isinstance(msg, SCCPKeepAliveAck))
+
+    def testCreateDefineTimeDate(self):
+        receivedBuffer = "\x00\x00\x00\x00\x94\x00\x00\x00\x00\x0b\x00\x00"
+    
+        msg = self.messageFactory.create(receivedBuffer)
+        
+        self.assertTrue(isinstance(msg, SCCPDefineTimeDate))
 
     def testCreateUnkownType(self):
         receivedBuffer = "\x00\x00\x00\x00\xFF\xFF\x00\x00\x00\x0b\x00\x00"

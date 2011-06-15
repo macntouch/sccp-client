@@ -147,9 +147,9 @@ class SCCPClientWindow(QMainWindow):
     
     def onRegisteredAck(self,registerAck):
         self.log("sccp phone registered")
-        self.log("          keepAliveInterval : " + `registerAck.keepAliveInterval`)
-        self.log("               dateTemplate : " + `registerAck.dateTemplate`)
-        self.log(" secondaryKeepAliveInterval : " + `registerAck.secondaryKeepAliveInterval`)
+        self.log("--          keepAliveInterval : " + `registerAck.keepAliveInterval`)
+        self.log("--               dateTemplate : " + `registerAck.dateTemplate`)
+        self.log("-- secondaryKeepAliveInterval : " + `registerAck.secondaryKeepAliveInterval`)
 #        self.sendKeepAlive()
         self.keepalive_timer = QTimer(self)
         self.keepalive_timer.timeout.connect(self.sendKeepAlive)
@@ -157,7 +157,7 @@ class SCCPClientWindow(QMainWindow):
         self.circle_widget.connected = True
     
     def onCapabilitiesReq(self,message):
-        self.log("on capabilities request")
+        self.log("On capabilities request")
         capabilities = SCCPCapabilitiesRes()
         self.client.send_msg(capabilities.pack())
         message = SCCPMessage(SCCPMessageType.TimeDateReqMessage)
