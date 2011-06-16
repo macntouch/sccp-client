@@ -19,6 +19,7 @@ from network.sccpclientfactory import SCCPClientFactory
 from sccp.sccpcapabilities import SCCPCapabilitiesRes
 from sccp.sccpregisteravailablelines import SCCPRegisterAvailableLines
 from gui.connectindicator import ConnectIndicator
+from gui.dialpad import DialPad
 
 SERVER_HOST = '192.168.30.83'
 SERVER_PORT = 2000
@@ -66,6 +67,9 @@ class SCCPClientWindow(QMainWindow):
         hbox = QVBoxLayout()
         hbox.addLayout(self.create_time_box())
         hbox.addWidget(self.circle_widget)
+        
+        dialPad = DialPad()
+        hbox.addLayout(dialPad)
         
         hostBox = QHBoxLayout()
         hostBox.addWidget(hostLabel)
