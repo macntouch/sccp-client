@@ -18,49 +18,11 @@ from sccp.sccpregister import SCCPRegister
 from network.sccpclientfactory import SCCPClientFactory
 from sccp.sccpcapabilities import SCCPCapabilitiesRes
 from sccp.sccpregisteravailablelines import SCCPRegisterAvailableLines
+from gui.connectindicator import ConnectIndicator
 
 SERVER_HOST = '192.168.30.83'
 SERVER_PORT = 2000
 DEVICE_NAME= 'SEP00164697AAAA'
-
-
-class CircleWidget(QWidget):
-    def __init__(self, parent=None):
-        super(CircleWidget, self).__init__(parent)
-        self.nframe = 0
-        self.setBackgroundRole(QPalette.Base)
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.connected = False
-
-    def minimumSizeHint(self):
-        return QSize(50, 50)
-
-    def sizeHint(self):
-        return QSize(50, 50)
-
-    def next(self):
-        self.nframe += 1
-        self.update()
-
-    def paintEvent(self, event):
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing, True)
-        painter.translate(self.width() / 2, self.height() / 2)
-
-        for diameter in range(0, 32, 9):
-            delta = abs((self.nframe % 64) - diameter / 2)
-            alpha = 255 - (delta * delta) / 4 - diameter
-            if alpha > 0:
-                if (self.connected):
-                    painter.setPen(QPen(QColor(0, 192, 0, alpha), 3))
-                else:    
-                    painter.setPen(QPen(QColor(255, 0, 0, alpha), 3))
-                painter.drawEllipse(QRectF(
-                    -diameter / 2.0,
-                    -diameter / 2.0, 
-                    diameter, 
-                    diameter))
-
 
 class LogWidget(QTextBrowser):
     def __init__(self, parent=None):
@@ -90,7 +52,7 @@ class SCCPClientWindow(QMainWindow):
     def create_main_frame(self):
        
         
-        self.circle_widget = CircleWidget()
+        self.circle_widget = ConnectIndicator()
         self.doit_button = QPushButton('Connect !')
         self.doit_button.clicked.connect(self.on_doit)
         self.log_widget = LogWidget()
