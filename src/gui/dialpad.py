@@ -21,6 +21,8 @@ class DialPad(QVBoxLayout):
         self.createButtonRange(7)
         self.createLastRange()
 
+    def connectPad(self,padHandler):
+        self.padHandler = padHandler
    
     def createDialEditBox(self):
         editBox = QHBoxLayout()
@@ -49,3 +51,6 @@ class DialPad(QVBoxLayout):
 
     def onDialButton(self):
         self.numberEdit.setText(str(self.numberEdit.text())+str(self.sender().text()))
+        self.padHandler(str(self.sender().text()))
+        
+    

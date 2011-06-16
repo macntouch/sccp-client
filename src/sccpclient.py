@@ -69,6 +69,7 @@ class SCCPClientWindow(QMainWindow):
         hbox.addWidget(self.circle_widget)
         
         dialPad = DialPad()
+        dialPad.connectPad(self.onDialButtonPushed)
         hbox.addLayout(dialPad)
         
         hostBox = QHBoxLayout()
@@ -188,6 +189,8 @@ class SCCPClientWindow(QMainWindow):
         self.log("close event")
         self.reactor.stop()
 
+    def onDialButtonPushed(self,car):
+        self.log("dialed : " + car)
 
 #-------------------------------------------------------------------------------
 if __name__ == "__main__":
