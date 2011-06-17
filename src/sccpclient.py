@@ -22,6 +22,7 @@ from gui.connectindicator import ConnectIndicator
 from gui.dialpad import DialPad
 from gui.softkeys import SoftKeys
 from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
+from sccp.sccpkeypadbutton import SCCPKeyPadButton
 
 SERVER_HOST = '192.168.30.83'
 SERVER_PORT = 2000
@@ -207,6 +208,8 @@ class SCCPClientWindow(QMainWindow):
 
     def onDialButtonPushed(self,car):
         self.log("dialed : " + car)
+        message = SCCPKeyPadButton(int(car))
+        self.client.send_msg(message.pack())
         
     def onSoftKey(self,event):
         self.log('on soft key '+`event`)
