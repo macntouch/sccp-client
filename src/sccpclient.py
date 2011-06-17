@@ -118,6 +118,7 @@ class SCCPClientWindow(QMainWindow):
         self.client.addHandler(SCCPMessageType.CapabilitiesReqMessage,self.onCapabilitiesReq)
         self.client.addHandler(SCCPMessageType.KeepAliveAckMessage,self.onKeepAliveAck)
         self.client.addHandler(SCCPMessageType.DefineTimeDate,self.onDefineTimeDate)
+        self.client.addHandler(SCCPMessageType.SetSpeakerModeMessage,self.onSetSpeakerMode)
         
     
     def on_doit(self):
@@ -166,7 +167,9 @@ class SCCPClientWindow(QMainWindow):
         self.timeDateLabel.setText(`message.day` + '-'+`message.month` + '-' + `message.year` 
                                    + ' ' +`message.hour`+':'+`message.minute`+':'+`message.seconds`)
 
-    
+    def onSetSpeakerMode(self,message):
+        self.log('set speaker mode '+`message.speakerOn`)
+        
     def sendKeepAlive(self):
         self.log("sending keepalive")
         message = SCCPMessage(SCCPMessageType.KeepAliveMessage)
