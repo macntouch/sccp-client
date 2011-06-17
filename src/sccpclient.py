@@ -20,6 +20,7 @@ from sccp.sccpcapabilities import SCCPCapabilitiesRes
 from sccp.sccpregisteravailablelines import SCCPRegisterAvailableLines
 from gui.connectindicator import ConnectIndicator
 from gui.dialpad import DialPad
+from gui.softkeys import SoftKeys
 
 SERVER_HOST = '192.168.30.83'
 SERVER_PORT = 2000
@@ -67,6 +68,10 @@ class SCCPClientWindow(QMainWindow):
         hbox = QVBoxLayout()
         hbox.addLayout(self.create_time_box())
         hbox.addWidget(self.circle_widget)
+        
+        softKeys = SoftKeys()
+        softKeys.connectSoftKeys(self.onSoftKey)
+        hbox.addLayout(softKeys)
         
         dialPad = DialPad()
         dialPad.connectPad(self.onDialButtonPushed)
@@ -191,6 +196,9 @@ class SCCPClientWindow(QMainWindow):
 
     def onDialButtonPushed(self,car):
         self.log("dialed : " + car)
+        
+    def onSoftKey(self,function):
+        self.log('on soft key '+`function`)
 
 #-------------------------------------------------------------------------------
 if __name__ == "__main__":
