@@ -34,10 +34,10 @@ class ConnectIndicator(QWidget):
         self.connected = False
 
     def minimumSizeHint(self):
-        return QSize(50, 50)
+        return QSize(30, 30)
 
     def sizeHint(self):
-        return QSize(50, 50)
+        return QSize(30, 30)
 
     def next(self):
         self.nframe += 1
@@ -48,7 +48,7 @@ class ConnectIndicator(QWidget):
         painter.setRenderHint(QPainter.Antialiasing, True)
         painter.translate(self.width() / 2, self.height() / 2)
 
-        for diameter in range(0, 32, 9):
+        for diameter in range(0, 25, 9):
             delta = abs((self.nframe % 64) - diameter / 2)
             alpha = 255 - (delta * delta) / 4 - diameter
             if alpha > 0:
