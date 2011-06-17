@@ -119,6 +119,7 @@ class SCCPClientWindow(QMainWindow):
         self.client.addHandler(SCCPMessageType.KeepAliveAckMessage,self.onKeepAliveAck)
         self.client.addHandler(SCCPMessageType.DefineTimeDate,self.onDefineTimeDate)
         self.client.addHandler(SCCPMessageType.SetSpeakerModeMessage,self.onSetSpeakerMode)
+        self.client.addHandler(SCCPMessageType.CallStateMessage,self.onCallState)
         
     
     def on_doit(self):
@@ -169,6 +170,12 @@ class SCCPClientWindow(QMainWindow):
 
     def onSetSpeakerMode(self,message):
         self.log('set speaker mode '+`message.speakerOn`)
+        
+    def onCallState(self,message):
+        self.log('call state line : ' + `message.line` + ' for callId '+ `message.callId` + ' is ' + `message.callState`)
+        self.currentLine = message.line
+        self.currentCallId=message.callId
+        self.callState=message.callState
         
     def sendKeepAlive(self):
         self.log("sending keepalive")

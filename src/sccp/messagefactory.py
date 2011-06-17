@@ -12,6 +12,7 @@ from sccp.sccpcapabilitiesreq import SCCPCapabilitiesReq
 from sccp.sccpkeepaliveack import SCCPKeepAliveAck
 from sccp.sccpdefinetimedate import SCCPDefineTimeDate
 from sccp.sccpsetspeakermode import SCCPSetSpeakerMode
+from sccp.sccpcallstate import SCCPCallState
 
 class MessageFactory():
     '''
@@ -33,4 +34,6 @@ class MessageFactory():
             msg = SCCPDefineTimeDate()
         if (messageType == SCCPMessageType.SetSpeakerModeMessage):
             msg = SCCPSetSpeakerMode()
+        if (messageType == SCCPMessageType.CallStateMessage):
+            msg = SCCPCallState()
         return msg
