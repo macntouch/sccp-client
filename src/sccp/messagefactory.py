@@ -14,6 +14,7 @@ from sccp.sccpdefinetimedate import SCCPDefineTimeDate
 from sccp.sccpsetspeakermode import SCCPSetSpeakerMode
 from sccp.sccpcallstate import SCCPCallState
 from sccp.sccpactivatecallplane import SCCPActivateCallPlane
+from sccp.sccpstarttone import SCCPStartTone
 
 class MessageFactory():
     '''
@@ -39,5 +40,7 @@ class MessageFactory():
             msg = SCCPCallState()
         if (messageType == SCCPMessageType.ActivateCallPlaneMessage):
             msg = SCCPActivateCallPlane()
+        if (messageType == SCCPMessageType.StartToneMessage):
+            msg = SCCPStartTone()
     
         return msg

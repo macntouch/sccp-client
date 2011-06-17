@@ -46,6 +46,9 @@ class SCCPClientWindow(QMainWindow):
         self.create_main_frame()
         self.create_client()
         self.create_timer()
+        
+        self.line = 0
+        self.callId = 0
 
     def create_time_box(self):
         timeBox = QHBoxLayout()
@@ -122,6 +125,7 @@ class SCCPClientWindow(QMainWindow):
         self.client.addHandler(SCCPMessageType.SetSpeakerModeMessage,self.onSetSpeakerMode)
         self.client.addHandler(SCCPMessageType.CallStateMessage,self.onCallState)
         self.client.addHandler(SCCPMessageType.ActivateCallPlaneMessage,self.onActivateCallPlane)
+        self.client.addHandler(SCCPMessageType.StartToneMessage,self.onStartTone)
         
         
     
@@ -182,6 +186,9 @@ class SCCPClientWindow(QMainWindow):
         
     def onActivateCallPlane(self,message):
         self.log('Activate call plane on line '+`message.line`)
+    
+    def onStartTone(self,message):
+        self.log('start tone : '+`message.tone` + ' timeout ' + `message.toneTimeout` + ' line ' + `message.line` + ' for callId '+ `message.callId`)
         
     def sendKeepAlive(self):
         self.log("sending keepalive")
