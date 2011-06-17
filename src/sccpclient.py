@@ -34,7 +34,7 @@ class LogWidget(QTextBrowser):
         palette.setColor(QPalette.Base, QColor("#ddddfd"))
         self.setPalette(palette)
     def minimumSizeHint(self, *args, **kwargs):
-        return QSize(400,400)
+        return QSize(400,300)
 
 
 class SCCPClientWindow(QMainWindow):
@@ -53,16 +53,13 @@ class SCCPClientWindow(QMainWindow):
         return timeBox        
 
     def create_main_frame(self):
-       
-        
+
         self.circle_widget = ConnectIndicator()
         self.doit_button = QPushButton('Connect !')
         self.doit_button.clicked.connect(self.on_doit)
         self.log_widget = LogWidget()
-        hostLabel = QLabel("Host : ")
         self.hostEdit = QLineEdit()
         self.hostEdit.setText(SERVER_HOST)
-        deviceNameLabel = QLabel("Phone Set : ")
         self.deviceNameEdit = QLineEdit()
         self.deviceNameEdit.setText(DEVICE_NAME)
         
@@ -78,14 +75,7 @@ class SCCPClientWindow(QMainWindow):
         dialPad.connectPad(self.onDialButtonPushed)
         hbox.addLayout(dialPad)
         
-        hostBox = QHBoxLayout()
-        hostBox.addWidget(hostLabel)
-        hostBox.addWidget(self.hostEdit)
-        hbox.addLayout(hostBox)
-        deviceBox = QHBoxLayout()
-        deviceBox.addWidget(deviceNameLabel)
-        deviceBox.addWidget(self.deviceNameEdit)
-        hbox.addLayout(deviceBox)
+        self.createDeviceParameters(hbox)
 
         hbox.addWidget(self.doit_button)
         hbox.addWidget(self.log_widget)
@@ -98,6 +88,16 @@ class SCCPClientWindow(QMainWindow):
         
         self.setCentralWidget(main_frame)
         
+    def createDeviceParameters(self,layout):
+        hostLabel = QLabel("Host : ")
+        hostBox = QHBoxLayout()
+        hostBox.addWidget(hostLabel)
+        hostBox.addWidget(self.hostEdit)
+        deviceNameLabel = QLabel("Phone Set : ")
+        hostBox.addWidget(deviceNameLabel)
+        hostBox.addWidget(self.deviceNameEdit)
+        layout.addLayout(hostBox)
+
     def create_timer(self):
         self.circle_timer = QTimer(self)
         self.circle_timer.timeout.connect(self.circle_widget.next)
