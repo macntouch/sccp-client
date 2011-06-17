@@ -13,9 +13,9 @@ class SCCPSetSpeakerMode(SCCPMessage):
 
     def __init__(self):
         SCCPMessage.__init__(self, SCCPMessageType.SetSpeakerModeMessage)
-        self.speakerOn = False
+        self.mode = 0
         
         
     def unPack(self,buffer):
-        self.speakerOn = bool(unpack("L",buffer[:4])[0])
+        self.mode = unpack("L",buffer[:4])[0]
 
