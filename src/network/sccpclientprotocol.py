@@ -21,7 +21,6 @@ class SCCPClientProtocol(IntNStringReceiver):
         """
         Convert int prefixed strings into calls to stringReceived.
         """
-        print "data received"
         self.recvd = self.recvd + recd
         while len(self.recvd) >= self.prefixLength and not self.paused:
             length ,= struct.unpack(
@@ -42,17 +41,10 @@ class SCCPClientProtocol(IntNStringReceiver):
         message.unPack(s[8:])
         self.factory.handleMessage(message)
 
-        #self.factory.got_msg(s);
-
-        #self.factory.onMessage(messageType)
-#        if messageType == SCCPMessageType.RegisterAckMessage:
-#            self.factory.onRegisterAck()
 
     def connectionMade(self):
         self.factory.clientReady(self)
     
         
     def sendString(self, data):
-        print "sending " +str(len(data))
-#IntNStringReceiver.sendString(self, data)
         self.transport.write(struct.pack(self.structFormat, len(data)) + data+"\x00\x00\x00\x00")
