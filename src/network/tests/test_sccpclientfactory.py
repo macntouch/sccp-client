@@ -8,6 +8,7 @@ from network.sccpclientfactory import SCCPClientFactory
 from sccp.sccpmessagetype import SCCPMessageType
 from sccp.sccpregisterack import SCCPRegisterAck
 from sccp.sccpmessage import SCCPMessage
+from mock import Mock
 
 
 class TestSCCPClientFactory(unittest.TestCase):
@@ -17,7 +18,7 @@ class TestSCCPClientFactory(unittest.TestCase):
         self.handled = False
         self.unkown = False
         self.lastMessageTypeReceived = 0x0000
-        self.clientFactory = SCCPClientFactory(self.unused, self.unused, self.unused) 
+        self.clientFactory = SCCPClientFactory(self.unused, self.unused) 
 
     def unused(self):
         '''
@@ -33,7 +34,7 @@ class TestSCCPClientFactory(unittest.TestCase):
         
 
     def testHandleMessage(self):
-        self.clientFactory = SCCPClientFactory(self.unused, self.unused, self.unused) 
+        self.clientFactory = SCCPClientFactory(self.unused, self.unused) 
         self.clientFactory.addHandler(SCCPMessageType.RegisterAckMessage, self.handleMessage)
         self.clientFactory.handleMessage(SCCPRegisterAck())
         self.assertTrue(self.handled)
@@ -45,6 +46,14 @@ class TestSCCPClientFactory(unittest.TestCase):
         self.clientFactory.handleMessage(message)
         self.assertTrue(self.unkown)
         self.assertEquals(0xFFFF,self.lastMessageTypeReceived)
+        
+    
+    def testSendSccpMessage(self):
+        message = SCCPMessage(SCCPMessageType.ButtonTemplateReqMessage)
+        networkClient = Mock()
+        self.clientFactory.client=networkClient
+        self.clientFactory.sendSccpMessage(message)
+        networkClient.sendString.assert_called_with(message.pack())
         
 
 if __name__ == "__main__":

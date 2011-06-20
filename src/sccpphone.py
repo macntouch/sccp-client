@@ -19,6 +19,8 @@ class SCCPPhone():
         
     def setLogger(self,logger):
         self.log = logger
+    def setTimerProvider(self,timerProvider):
+        self.timerProvider = timerProvider
         
     def createClient(self):
         self.log('creating sccp client factory')
@@ -26,7 +28,7 @@ class SCCPPhone():
                         self.on_sccp_connect_success,
                         self.on_sccp_connect_fail)
         self.client.handleUnknownMessage(self.onUnknownMessage)
-#        self.client.addHandler(SCCPMessageType.RegisterAckMessage,self.onRegisteredAck)
+        self.client.addHandler(SCCPMessageType.RegisterAckMessage,self.onRegisteredAck)
 #        self.client.addHandler(SCCPMessageType.CapabilitiesReqMessage,self.onCapabilitiesReq)
 #        self.client.addHandler(SCCPMessageType.KeepAliveAckMessage,self.onKeepAliveAck)
 #        self.client.addHandler(SCCPMessageType.DefineTimeDate,self.onDefineTimeDate)
@@ -45,5 +47,19 @@ class SCCPPhone():
     def on_sccp_connect_fail(self, reason):
         # reason is a twisted.python.failure.Failure  object
         self.log('Connection failed: %s' % reason.getErrorMessage())
+        
+    def onKeepAliveTimer(self):
+        self.log('on keep alive')
+        
+    def onUnknownMessage(self,message):
+        self.log('receive unkown message ' + message.toStr())
+
+    def onRegisteredAck(self,registerAck):
+        self.log("sccp phone registered")
+        self.log("--          keepAliveInterval : " + `registerAck.keepAliveInterval`)
+        self.log("--               dateTemplate : " + `registerAck.dateTemplate`)
+        self.log("-- secondaryKeepAliveInterval : " + `registerAck.secondaryKeepAliveInterval`)
+        self.timerProvider.createTimer(registerAck.keepAliveInterval,self.onKeepAliveTimer)
+
 
         

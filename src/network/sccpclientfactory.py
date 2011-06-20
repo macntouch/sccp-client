@@ -32,7 +32,11 @@ class SCCPClientFactory(ClientFactory):
     def send_msg(self, msg):
         if self.client:
             self.client.sendString(msg)
-                       
+            
+    def sendSccpMessage(self,message):
+        if self.client:
+            self.client.sendString(message.pack())
+                                   
     def clientConnectionLost(self, connector, reason):
         print 'Lost connection.  Reason:', reason
     

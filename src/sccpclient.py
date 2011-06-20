@@ -120,6 +120,7 @@ class SCCPClientWindow(QMainWindow):
         deviceName = str(self.deviceNameEdit.text())
         self.sccpPhone = SCCPPhone(serverHost,deviceName)
         self.sccpPhone.setLogger(self.log)
+        self.sccpPhone.setTimerProvider(self)
         self.client = self.sccpPhone.createClient()        
         
     
@@ -130,16 +131,12 @@ class SCCPClientWindow(QMainWindow):
         self.connection = self.reactor.connectTCP(serverHost, SERVER_PORT, self.client)
 
     
-    def onRegisteredAck(self,registerAck):
-        self.log("sccp phone registered")
-        self.log("--          keepAliveInterval : " + `registerAck.keepAliveInterval`)
-        self.log("--               dateTemplate : " + `registerAck.dateTemplate`)
-        self.log("-- secondaryKeepAliveInterval : " + `registerAck.secondaryKeepAliveInterval`)
-#        self.sendKeepAlive()
+    def createTimer(self,intervalSecs,timerCallback):
         self.keepalive_timer = QTimer(self)
-        self.keepalive_timer.timeout.connect(self.sendKeepAlive)
-        self.keepalive_timer.start(registerAck.keepAliveInterval*1000)
+        self.keepalive_timer.timeout.connect(timerCallback)
+        self.keepalive_timer.start(intervalSecs*1000)
         self.circle_widget.connected = True
+        
     
     def onCapabilitiesReq(self,message):
         self.log("On capabilities request")
@@ -185,11 +182,7 @@ class SCCPClientWindow(QMainWindow):
         message = SCCPMessage(SCCPMessageType.KeepAliveMessage)
         strMessage = message.pack();
         self.client.send_msg(strMessage)
-        
                 
-    def onUnknownMessage(self,message):
-        self.log('receive unkown message ' + message.toStr())
-        
     def log(self, msg):
         timestamp = '[%010.3f]' % time.clock()
         self.log_widget.append(timestamp + ' ' + str(msg))
