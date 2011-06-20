@@ -18,11 +18,6 @@ class TestSCCPPhone(unittest.TestCase):
 
 
     def testOnConnectSuccess(self):
-        class _ANY(object):
-            def __eq__(self,other):
-                return True
-    
-        ANY = _ANY()
 
         networkClient = Mock()
         sccpPhone = SCCPPhone('1.1.1.1','SEP001166554433')
