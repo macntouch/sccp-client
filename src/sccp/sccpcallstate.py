@@ -37,6 +37,33 @@ class SCCPCallState(SCCPMessage):
     SCCP_CHANNELSTATE_ZOMBIE = 0xFE
     SCCP_CHANNELSTATE_DND = 0xFF
     
+    
+    sccp_channelstates = {SCCP_CHANNELSTATE_DOWN : "DOWN",
+                          SCCP_CHANNELSTATE_OFFHOOK: "OFFHOOK",
+                          SCCP_CHANNELSTATE_ONHOOK: "ONHOOK",
+                          SCCP_CHANNELSTATE_RINGOUT: "RINGOUT",
+                          SCCP_CHANNELSTATE_RINGING: "RINGING",
+                          SCCP_CHANNELSTATE_CONNECTED: "CONNECTED",
+                          SCCP_CHANNELSTATE_BUSY: "BUSY    ",
+                          SCCP_CHANNELSTATE_CONGESTION: "CONGESTION",
+                          SCCP_CHANNELSTATE_HOLD: "HOLD    ",
+                          SCCP_CHANNELSTATE_CALLWAITING: "CALLWAITING",
+                          SCCP_CHANNELSTATE_CALLTRANSFER: "CALLTRANSFER",
+                          SCCP_CHANNELSTATE_CALLPARK: "CALLPARK",
+                          SCCP_CHANNELSTATE_PROCEED: "PROCEED",
+                          SCCP_CHANNELSTATE_CALLREMOTEMULTILINE: "CALLREMOTEMULTILINE",
+                          SCCP_CHANNELSTATE_INVALIDNUMBER: "INVALIDNUMBER",
+                          SCCP_CHANNELSTATE_DIALING: "DIALING",
+                          SCCP_CHANNELSTATE_PROGRESS: "PROGRESS",
+                          SCCP_CHANNELSTATE_GETDIGITS: "GETDIGITS",
+                          SCCP_CHANNELSTATE_CALLCONFERENCE: "CALLCONFERENCE",
+                          SCCP_CHANNELSTATE_SPEEDDIAL: "SPEEDDIAL",
+                          SCCP_CHANNELSTATE_DIGITSFOLL: "DIGITSFOLL",
+                          SCCP_CHANNELSTATE_INVALIDCONFERENCE: "INVALIDCONFERENCE",
+                          SCCP_CHANNELSTATE_CONNECTEDCONFERENCE: "CONNECTEDCONFERENCE",
+                          SCCP_CHANNELSTATE_BLINDTRANSFER: "BLINDTRANSFER",
+                          SCCP_CHANNELSTATE_ZOMBIE: "ZOMBIE",
+                          SCCP_CHANNELSTATE_DND: "DND"}
 
     def __init__(self):
         SCCPMessage.__init__(self, SCCPMessageType.CallStateMessage)

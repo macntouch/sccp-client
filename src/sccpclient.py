@@ -23,6 +23,8 @@ from gui.dialpad import DialPad
 from gui.softkeys import SoftKeys
 from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
 from sccp.sccpkeypadbutton import SCCPKeyPadButton
+from sccp.sccpcallstate import SCCPCallState
+from gui.calldisplay import CallDisplay
 
 SERVER_HOST = '192.168.30.83'
 SERVER_PORT = 2000
@@ -52,7 +54,7 @@ class SCCPClientWindow(QMainWindow):
 
     def create_time_box(self):
         timeBox = QHBoxLayout()
-        self.timeDateLabel = QLabel()
+        self.timeDateLabel = QLabel('..................')
         timeBox.addWidget(self.timeDateLabel)
         return timeBox        
 
@@ -70,7 +72,8 @@ class SCCPClientWindow(QMainWindow):
         hbox = QVBoxLayout()
         hbox.addLayout(self.create_time_box())
         hbox.addWidget(self.circle_widget)
-        
+        self.callDisplay = CallDisplay()
+        hbox.addLayout(self.callDisplay)
         softKeys = SoftKeys()
         softKeys.connectSoftKeys(self.onSoftKey)
         hbox.addLayout(softKeys)
@@ -84,7 +87,6 @@ class SCCPClientWindow(QMainWindow):
         hbox.addWidget(self.doit_button)
         hbox.addWidget(self.log_widget)
 
-        self.timeDateLabel.setText("...................")
                 
         main_frame = QWidget()
         main_frame.setLayout(hbox)
@@ -179,7 +181,8 @@ class SCCPClientWindow(QMainWindow):
         self.log('set speaker mode '+`message.mode`)
         
     def onCallState(self,message):
-        self.log('call state line : ' + `message.line` + ' for callId '+ `message.callId` + ' is ' + `message.callState`)
+        self.log('call state line : ' + `message.line` + ' for callId '+ `message.callId` + ' is ' + SCCPCallState.sccp_channelstates[message.callState])
+        self.callDisplay.displayCall(message.line, message.callId, message.callState)
         self.currentLine = message.line
         self.currentCallId=message.callId
         self.callState=message.callState
@@ -225,7 +228,10 @@ class SCCPClientWindow(QMainWindow):
         
     def onSoftKey(self,event):
         self.log('on soft key '+`event`)
-        message = SCCPSoftKeyEvent(event)
+        if (event == 9):
+            message = SCCPSoftKeyEvent(event,self.currentLine,self.currentCallId)
+        else:
+            message = SCCPSoftKeyEvent(event)
         self.client.send_msg(message.pack())
 
 #-------------------------------------------------------------------------------
