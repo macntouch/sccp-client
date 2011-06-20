@@ -25,6 +25,7 @@ from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
 from sccp.sccpkeypadbutton import SCCPKeyPadButton
 from sccp.sccpcallstate import SCCPCallState
 from gui.calldisplay import CallDisplay
+from sccpphone import SCCPPhone
 
 SERVER_HOST = '192.168.30.83'
 SERVER_PORT = 2000
@@ -115,20 +116,11 @@ class SCCPClientWindow(QMainWindow):
         self.circle_timer.start(25)
         
     def create_client(self):
-        self.client = SCCPClientFactory(
-                        self.on_client_connect_success,
-                        self.on_client_connect_fail,
-                        self.on_client_receive)
-        self.client.handleUnknownMessage(self.onUnknownMessage)
-        self.client.addHandler(SCCPMessageType.RegisterAckMessage,self.onRegisteredAck)
-        self.client.addHandler(SCCPMessageType.CapabilitiesReqMessage,self.onCapabilitiesReq)
-        self.client.addHandler(SCCPMessageType.KeepAliveAckMessage,self.onKeepAliveAck)
-        self.client.addHandler(SCCPMessageType.DefineTimeDate,self.onDefineTimeDate)
-        self.client.addHandler(SCCPMessageType.SetSpeakerModeMessage,self.onSetSpeakerMode)
-        self.client.addHandler(SCCPMessageType.CallStateMessage,self.onCallState)
-        self.client.addHandler(SCCPMessageType.ActivateCallPlaneMessage,self.onActivateCallPlane)
-        self.client.addHandler(SCCPMessageType.StartToneMessage,self.onStartTone)
-        
+        serverHost = str(self.hostEdit.text())
+        deviceName = str(self.deviceNameEdit.text())
+        self.sccpPhone = SCCPPhone(serverHost,deviceName)
+        self.sccpPhone.setLogger(self.log)
+        self.client = self.sccpPhone.createClient()        
         
     
     def on_doit(self):
@@ -137,11 +129,6 @@ class SCCPClientWindow(QMainWindow):
         self.log("trying to connect to : "+serverHost+ " on " +`SERVER_PORT`)
         self.connection = self.reactor.connectTCP(serverHost, SERVER_PORT, self.client)
 
-    def on_client_connect_success(self):
-        deviceName = str(self.deviceNameEdit.text())
-        self.log('Connected to server. Sending register with phone set : ' + deviceName)
-        registerMessage = SCCPRegister(deviceName, "192.168.30.84")
-        self.client.send_msg(registerMessage.pack())
     
     def onRegisteredAck(self,registerAck):
         self.log("sccp phone registered")
@@ -199,17 +186,7 @@ class SCCPClientWindow(QMainWindow):
         strMessage = message.pack();
         self.client.send_msg(strMessage)
         
-    def on_client_connect_fail(self, reason):
-        # reason is a twisted.python.failure.Failure  object
-        self.log('Connection failed: %s' % reason.getErrorMessage())
-        
-    def on_client_receive(self, msg):
-        self.log('server reply: %d' % len(msg))
-        messageType = struct.unpack("L",msg[4:8])[0]
-        self.log( "message type " + str(messageType))
-
-        #self.connection.disconnect()
-        
+                
     def onUnknownMessage(self,message):
         self.log('receive unkown message ' + message.toStr())
         

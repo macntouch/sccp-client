@@ -30,6 +30,14 @@ class SCCPRegister(SCCPMessage):
         self.deviceType=self.TelecasterBus
         self.maxStreams=self.MAXSTREAMS
         
+    def __eq__(self,obj):
+        if (self.deviceName != obj.deviceName):
+            return False
+        if (self.ipAddress != obj.ipAddress):
+            return False
+        return True
+        
+        
     def pack(self):
         strPack = SCCPMessage.pack(self) + self.deviceName + "\x00"
         strPack = strPack + pack("LL",self.stationUserId,self.stationInstance)

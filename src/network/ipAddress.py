@@ -9,7 +9,12 @@ class IpAddress:
     def __init__(self,address):
         self.address = address
         
-        
+    def __eq__(self,obj):
+        return self.address == obj.address
+    
+    def __ne__(self,obj):
+        return self.address != obj.address
+    
     def pack(self):
         bytes=self.address.split(".")
         strPack = ""
