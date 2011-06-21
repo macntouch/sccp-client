@@ -67,6 +67,9 @@ class SCCPCallState(SCCPMessage):
 
     def __init__(self):
         SCCPMessage.__init__(self, SCCPMessageType.CallStateMessage)
+        self.line=0
+        self.callState=self.SCCP_CHANNELSTATE_DOWN
+        self.callId=0
         
         
     def unPack(self,buffer):

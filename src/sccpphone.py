@@ -10,6 +10,7 @@ from sccp.sccpcapabilities import SCCPCapabilitiesRes
 from sccp.sccpbuttontemplatereq import SCCPButtonTemplateReq
 from sccp.sccpregisteravailablelines import SCCPRegisterAvailableLines
 from sccp.sccptimedatereq import SCCPTimeDateReq
+from sccp.sccpcallstate import SCCPCallState
 
 class SCCPPhone():
     '''
@@ -29,6 +30,9 @@ class SCCPPhone():
     def setDateTimePicker(self,dateTimePicker):
         self.dateTimePicker = dateTimePicker
         
+    def setCallStateHandler(self,callStateHandler):
+        self.callStateHandler=callStateHandler
+        
     def createClient(self):
         self.log('creating sccp client factory')
         self.client = SCCPClientFactory(
@@ -40,7 +44,7 @@ class SCCPPhone():
         self.client.addHandler(SCCPMessageType.KeepAliveAckMessage,self.onKeepAliveAck)
         self.client.addHandler(SCCPMessageType.DefineTimeDate,self.onDefineTimeDate)
         self.client.addHandler(SCCPMessageType.SetSpeakerModeMessage,self.onSetSpeakerMode)
-#        self.client.addHandler(SCCPMessageType.CallStateMessage,self.onCallState)
+        self.client.addHandler(SCCPMessageType.CallStateMessage,self.onCallState)
 #        self.client.addHandler(SCCPMessageType.ActivateCallPlaneMessage,self.onActivateCallPlane)
 #        self.client.addHandler(SCCPMessageType.StartToneMessage,self.onStartTone)
         
@@ -90,4 +94,11 @@ class SCCPPhone():
     def onSetSpeakerMode(self,message):
         self.log('set speaker mode '+`message.mode`)
 
+    def onCallState(self,message):
+        self.log('call state line : ' + `message.line` + ' for callId '+ `message.callId` + ' is ' + SCCPCallState.sccp_channelstates[message.callState])
+        self.callStateHandler.handleCall(message.line,message.callId,message.callState)
+#        self.callDisplay.displayCall(message.line, message.callId, message.callState)
+#        self.currentLine = message.line
+#        self.currentCallId=message.callId
+#        self.callState=message.callState
         

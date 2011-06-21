@@ -5,25 +5,18 @@ PyQt work in unison with Twisted.
 Eli Bendersky (eliben@gmail.com)
 This code is in the public domain
 """
-import os, sys, time
-import Queue
+import sys, time
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from struct import pack
 
 from sccp.sccpmessage import SCCPMessage
 from sccp.sccpmessagetype import SCCPMessageType
-import struct
-from sccp.sccpregister import SCCPRegister
-from network.sccpclientfactory import SCCPClientFactory
-from sccp.sccpcapabilities import SCCPCapabilitiesRes
-from sccp.sccpregisteravailablelines import SCCPRegisterAvailableLines
 from gui.connectindicator import ConnectIndicator
 from gui.dialpad import DialPad
 from gui.softkeys import SoftKeys
 from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
 from sccp.sccpkeypadbutton import SCCPKeyPadButton
-from sccp.sccpcallstate import SCCPCallState
 from gui.calldisplay import CallDisplay
 from sccpphone import SCCPPhone
 
@@ -122,6 +115,7 @@ class SCCPClientWindow(QMainWindow):
         self.sccpPhone.setLogger(self.log)
         self.sccpPhone.setTimerProvider(self)
         self.sccpPhone.setDateTimePicker(self)
+        self.sccpPhone.setCallStateHandler(self)
         self.client = self.sccpPhone.createClient()        
         
     
@@ -144,12 +138,11 @@ class SCCPClientWindow(QMainWindow):
                                    + ' ' +`hour`+':'+`minute`+':'+`seconds`)
 
         
-    def onCallState(self,message):
-        self.log('call state line : ' + `message.line` + ' for callId '+ `message.callId` + ' is ' + SCCPCallState.sccp_channelstates[message.callState])
-        self.callDisplay.displayCall(message.line, message.callId, message.callState)
-        self.currentLine = message.line
-        self.currentCallId=message.callId
-        self.callState=message.callState
+    def handleCall(self,line,callId,callState):
+        self.callDisplay.displayCall(line, callId, callState)
+        self.currentLine = line
+        self.currentCallId=callId
+        self.callState=callState
         
     def onActivateCallPlane(self,message):
         self.log('Activate call plane on line '+`message.line`)

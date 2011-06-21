@@ -15,6 +15,7 @@ from tests.mock import Mock
 import unittest
 from sccp.sccpdefinetimedate import SCCPDefineTimeDate
 from sccp.sccpsetspeakermode import SCCPSetSpeakerMode
+from sccp.sccpcallstate import SCCPCallState
 
 
         
@@ -84,6 +85,19 @@ class TestSCCPPhone(unittest.TestCase):
         
     def testOnSetSpeakerMode(self):
         self.sccpPhone.onSetSpeakerMode(SCCPSetSpeakerMode())
+        
+    def testOnCallState(self):
+        callStateHandler = Mock()
+        self.sccpPhone.setCallStateHandler(callStateHandler)
+        
+        callState = SCCPCallState()
+        callState.callId=43
+        callState.line=2
+        callState.callState=SCCPCallState.SCCP_CHANNELSTATE_RINGING
+        
+        self.sccpPhone.onCallState(callState)
+        
+        callStateHandler.handleCall.assert_called_with(2,43,SCCPCallState.SCCP_CHANNELSTATE_RINGING)
     
     
          
