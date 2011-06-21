@@ -137,23 +137,7 @@ class SCCPClientWindow(QMainWindow):
         self.keepalive_timer.start(intervalSecs*1000)
         self.circle_widget.connected = True
         
-    
-    def onCapabilitiesReq(self,message):
-        self.log("On capabilities request")
-        self.log("sending capabilities response")
-        capabilities = SCCPCapabilitiesRes()
-        self.client.send_msg(capabilities.pack())
-        self.log("sending button template request message")
-        message = SCCPMessage(SCCPMessageType.ButtonTemplateReqMessage)
-        self.client.send_msg(message.pack())        
-        self.log("sending register available lines")
-        message=SCCPRegisterAvailableLines()
-        self.client.send_msg(message.pack())
-        self.log("sending time date request message")
-        message = SCCPMessage(SCCPMessageType.TimeDateReqMessage)
-        self.client.send_msg(message.pack())
-        
-  
+      
     def onDefineTimeDate(self,message):
         self.log('define time and date')
         self.timeDateLabel.setText(`message.day` + '-'+`message.month` + '-' + `message.year` 

@@ -6,6 +6,10 @@ Created on Jun 20, 2011
 from network.sccpclientfactory import SCCPClientFactory
 from sccp.sccpmessagetype import SCCPMessageType
 from sccp.sccpregister import SCCPRegister
+from sccp.sccpcapabilities import SCCPCapabilitiesRes
+from sccp.sccpbuttontemplatereq import SCCPButtonTemplateReq
+from sccp.sccpregisteravailablelines import SCCPRegisterAvailableLines
+from sccp.sccptimedatereq import SCCPTimeDateReq
 
 class SCCPPhone():
     '''
@@ -29,7 +33,7 @@ class SCCPPhone():
                         self.on_sccp_connect_fail)
         self.client.handleUnknownMessage(self.onUnknownMessage)
         self.client.addHandler(SCCPMessageType.RegisterAckMessage,self.onRegisteredAck)
-#        self.client.addHandler(SCCPMessageType.CapabilitiesReqMessage,self.onCapabilitiesReq)
+        self.client.addHandler(SCCPMessageType.CapabilitiesReqMessage,self.onCapabilitiesReq)
         self.client.addHandler(SCCPMessageType.KeepAliveAckMessage,self.onKeepAliveAck)
 #        self.client.addHandler(SCCPMessageType.DefineTimeDate,self.onDefineTimeDate)
 #        self.client.addHandler(SCCPMessageType.SetSpeakerModeMessage,self.onSetSpeakerMode)
@@ -64,4 +68,17 @@ class SCCPPhone():
         
     def onKeepAliveAck(self,message):
         self.log("Keepalive ack")
+    
+    def onCapabilitiesReq(self,message):
+        self.log("sending capabilities response")
+        self.client.sendSccpMessage(SCCPCapabilitiesRes())
+        self.log("sending button template request message")
+        self.client.sendSccpMessage(SCCPButtonTemplateReq())
+        self.log("sending register available lines")
+        self.client.sendSccpMessage(SCCPRegisterAvailableLines())
+        self.log("sending time date request message")
+        self.client.sendSccpMessage(SCCPTimeDateReq())
+
+        
+
         
