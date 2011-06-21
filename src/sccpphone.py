@@ -11,6 +11,7 @@ from sccp.sccpbuttontemplatereq import SCCPButtonTemplateReq
 from sccp.sccpregisteravailablelines import SCCPRegisterAvailableLines
 from sccp.sccptimedatereq import SCCPTimeDateReq
 from sccp.sccpcallstate import SCCPCallState
+from sccp.sccpkeypadbutton import SCCPKeyPadButton
 
 class SCCPPhone():
     '''
@@ -107,3 +108,14 @@ class SCCPPhone():
 
     def onActivateCallPlane(self,message):
         self.log('Activate call plane on line '+`message.line`)
+        
+    def onDialButtonPushed(self,car):
+        self.log("dialed : " + car)
+        if (car == '#'):
+            event = 15
+        elif (car == '*'):
+            event = 14
+        else:
+            event = int(car)
+        message = SCCPKeyPadButton(event)
+        self.client.sendSccpMessage(message)

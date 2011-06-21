@@ -51,6 +51,6 @@ class DialPad(QVBoxLayout):
 
     def onDialButton(self):
         self.numberEdit.setText(str(self.numberEdit.text())+str(self.sender().text()))
-        self.padHandler(str(self.sender().text()))
+        self.padHandler.onDialButtonPushed(str(self.sender().text()))
         
     

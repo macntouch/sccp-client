@@ -15,7 +15,10 @@ class SCCPKeyPadButton(SCCPMessage):
         SCCPMessage.__init__(self, SCCPMessageType.KeypadButtonMessage)
         self.button = button
         
-        
+
+    def __eq__(self,other):
+        return self.button == other.button
+            
     def pack(self):
         strPack = SCCPMessage.pack(self)
         strPack = strPack + pack("L",self.button)

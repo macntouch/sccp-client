@@ -54,7 +54,7 @@ class SoftKeys(QVBoxLayout):
                 
     def createSoftKey(self,layout,content):
         key = QPushButton(str(content))
-        key.setStyleSheet("background-color: #345677")
+        key.setStyleSheet("background-color: #0099FF")
         key.clicked.connect(self.onSoftKey)
         layout.addWidget(key)
         

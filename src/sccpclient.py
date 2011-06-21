@@ -72,9 +72,9 @@ class SCCPClientWindow(QMainWindow):
         softKeys.connectSoftKeys(self.onSoftKey)
         hbox.addLayout(softKeys)
         
-        dialPad = DialPad()
-        dialPad.connectPad(self.onDialButtonPushed)
-        hbox.addLayout(dialPad)
+        self.dialPad = DialPad()
+        
+        hbox.addLayout(self.dialPad)
         
         self.createDeviceParameters(hbox)
 
@@ -116,6 +116,8 @@ class SCCPClientWindow(QMainWindow):
         self.sccpPhone.setTimerProvider(self)
         self.sccpPhone.setDateTimePicker(self)
         self.sccpPhone.setCallStateHandler(self)
+        self.dialPad.connectPad(self.sccpPhone)
+        
         self.client = self.sccpPhone.createClient()        
         
     
@@ -151,11 +153,6 @@ class SCCPClientWindow(QMainWindow):
     def closeEvent(self, e):
         self.log("close event")
         self.reactor.stop()
-
-    def onDialButtonPushed(self,car):
-        self.log("dialed : " + car)
-        message = SCCPKeyPadButton(int(car))
-        self.client.send_msg(message.pack())
         
     def onSoftKey(self,event):
         self.log('on soft key '+`event`)
