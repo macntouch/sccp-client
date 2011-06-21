@@ -20,36 +20,36 @@ SKINNY_LBL_ENDCALL = 9
 SKINNY_LBL_RESUME = 10
 SKINNY_LBL_ANSWER = 11
 
+
+SOFT_KEYS_LABELS_TO_EVENT={
+                           'Redial' : SKINNY_LBL_REDIAL,
+                           'NewCall' : SKINNY_LBL_NEWCALL,
+                           'Hold' : SKINNY_LBL_HOLD,
+                           'Transfer' :SKINNY_LBL_TRANSFER,
+                           'EndCall' : SKINNY_LBL_ENDCALL,
+                           'Answer' : SKINNY_LBL_ANSWER 
+                           }
+
+
 class SoftKeys(QVBoxLayout):
 
     def __init__(self, *args, **kwargs):
         QVBoxLayout.__init__(self, *args, **kwargs)
-        self.createSoftKeyTexts()
         self.createSoftKeyButtons()
  
     def connectSoftKeys(self,softKeyHandler):
         self.softKeyHandler = softKeyHandler
        
-    def createSoftKeyTexts(self):
-        textBox = QHBoxLayout()
-        textBox.setAlignment(Qt.AlignCenter)
-        self.label1 = QLabel('NewCall')
-        textBox.addWidget(self.label1)
-        self.label2 = QLabel('EndCall')
-        textBox.addWidget(self.label2)
-        self.label3 = QLabel('Answer')
-        textBox.addWidget(self.label3)
-        self.label4 = QLabel('Redial')
-        textBox.addWidget(self.label4)
-        self.addLayout(textBox)
         
     def createSoftKeyButtons(self):
         buttonBox =QHBoxLayout()
         buttonBox.setAlignment(Qt.AlignCenter)
-        self.createSoftKey(buttonBox,SKINNY_LBL_NEWCALL)
-        self.createSoftKey(buttonBox,SKINNY_LBL_ENDCALL)
-        self.createSoftKey(buttonBox,SKINNY_LBL_ANSWER)
-        self.createSoftKey(buttonBox,SKINNY_LBL_REDIAL)
+        self.createSoftKey(buttonBox,'NewCall')
+        self.createSoftKey(buttonBox,'EndCall')
+        self.createSoftKey(buttonBox,'Answer')
+        self.createSoftKey(buttonBox,'Redial')
+        self.createSoftKey(buttonBox,'Hold')
+        self.createSoftKey(buttonBox,'Transfer')
         self.addLayout(buttonBox)
                 
     def createSoftKey(self,layout,content):
@@ -59,7 +59,8 @@ class SoftKeys(QVBoxLayout):
         layout.addWidget(key)
         
     def onSoftKey(self):
-        self.softKeyHandler(int(str(self.sender().text())))
+        event = SOFT_KEYS_LABELS_TO_EVENT[str(self.sender().text())]
+        self.softKeyHandler(event)
           
 
 
