@@ -40,7 +40,7 @@ class SCCPClientWindow(QMainWindow):
         self.reactor = reactor
         
         self.create_main_frame()
-        self.create_client()
+        #self.create_client()
         self.create_timer()
         
         self.line = 0
@@ -120,7 +120,7 @@ class SCCPClientWindow(QMainWindow):
         
     
     def on_doit(self):
-       
+        self.create_client()
         serverHost = str(self.hostEdit.text())
         self.log("trying to connect to : "+serverHost+ " on " +`SERVER_PORT`)
         self.connection = self.reactor.connectTCP(serverHost, SERVER_PORT, self.client)
@@ -159,7 +159,7 @@ class SCCPClientWindow(QMainWindow):
         
     def onSoftKey(self,event):
         self.log('on soft key '+`event`)
-        if (event == 9):
+        if (event != 2):
             message = SCCPSoftKeyEvent(event,self.currentLine,self.currentCallId)
         else:
             message = SCCPSoftKeyEvent(event)
