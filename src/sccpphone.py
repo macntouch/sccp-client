@@ -30,7 +30,7 @@ class SCCPPhone():
         self.client.handleUnknownMessage(self.onUnknownMessage)
         self.client.addHandler(SCCPMessageType.RegisterAckMessage,self.onRegisteredAck)
 #        self.client.addHandler(SCCPMessageType.CapabilitiesReqMessage,self.onCapabilitiesReq)
-#        self.client.addHandler(SCCPMessageType.KeepAliveAckMessage,self.onKeepAliveAck)
+        self.client.addHandler(SCCPMessageType.KeepAliveAckMessage,self.onKeepAliveAck)
 #        self.client.addHandler(SCCPMessageType.DefineTimeDate,self.onDefineTimeDate)
 #        self.client.addHandler(SCCPMessageType.SetSpeakerModeMessage,self.onSetSpeakerMode)
 #        self.client.addHandler(SCCPMessageType.CallStateMessage,self.onCallState)
@@ -61,5 +61,7 @@ class SCCPPhone():
         self.log("-- secondaryKeepAliveInterval : " + `registerAck.secondaryKeepAliveInterval`)
         self.timerProvider.createTimer(registerAck.keepAliveInterval,self.onKeepAliveTimer)
 
-
+        
+    def onKeepAliveAck(self,message):
+        self.log("Keepalive ack")
         

@@ -153,8 +153,6 @@ class SCCPClientWindow(QMainWindow):
         message = SCCPMessage(SCCPMessageType.TimeDateReqMessage)
         self.client.send_msg(message.pack())
         
-    def onKeepAliveAck(self,message):
-        self.log("Keepalive ack")
   
     def onDefineTimeDate(self,message):
         self.log('define time and date')

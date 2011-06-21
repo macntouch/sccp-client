@@ -8,6 +8,7 @@ from sccpphone import SCCPPhone
 from mock import Mock
 from sccp.sccpregister import SCCPRegister
 from sccp.sccpregisterack import SCCPRegisterAck
+from sccp.sccpcapabilitiesreq import SCCPCapabilitiesReq
 
 
 
@@ -40,7 +41,6 @@ class TestSCCPPhone(unittest.TestCase):
         self.sccpPhone.setTimerProvider(timerProvider)
         self.sccpPhone.onRegisteredAck(registerAck)
         timerProvider.createTimer.assert_called_with(25,self.sccpPhone.onKeepAliveTimer)
-        
         
         
 if __name__ == "__main__":
