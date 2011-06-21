@@ -17,7 +17,7 @@ from sccp.sccpdefinetimedate import SCCPDefineTimeDate
 from sccp.sccpsetspeakermode import SCCPSetSpeakerMode
 from sccp.sccpcallstate import SCCPCallState
 from sccp.sccpkeypadbutton import SCCPKeyPadButton
-from gui.softkeys import SKINNY_LBL_NEWCALL
+from gui.softkeys import SKINNY_LBL_NEWCALL, SKINNY_LBL_ANSWER
 from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
 
 
@@ -138,6 +138,36 @@ class TestSCCPPhone(unittest.TestCase):
         networkClient.sendSccpMessage.assert_was_called_with(newCallMessage)
         networkClient.sendSccpMessage.assert_was_called_with(SCCPKeyPadButton(1))
         networkClient.sendSccpMessage.assert_was_called_with(SCCPKeyPadButton(2))
+        
+        
+    def testOnSoftKeyNewCall(self):
+        networkClient = Mock()
+        self.sccpPhone.client = networkClient
+        newCallMessage = SCCPSoftKeyEvent(SKINNY_LBL_NEWCALL)
+        
+        self.sccpPhone.onSoftKey(SKINNY_LBL_NEWCALL)
+
+        networkClient.sendSccpMessage.assert_was_called_with(newCallMessage)
+
+    def testOnSoftKeyAnswerCall(self):
+        networkClient = Mock()
+        callStateHandler = Mock()
+        self.sccpPhone.client = networkClient
+        self.sccpPhone.setCallStateHandler(callStateHandler)
+        
+        callState = SCCPCallState()
+        callState.callId=43
+        callState.line=2
+        callState.callState=SCCPCallState.SCCP_CHANNELSTATE_RINGING
+        
+        self.sccpPhone.onCallState(callState)
+
+        newCallMessage = SCCPSoftKeyEvent(SKINNY_LBL_ANSWER,2,43)
+        
+        self.sccpPhone.onSoftKey(SKINNY_LBL_ANSWER)
+
+        networkClient.sendSccpMessage.assert_was_called_with(newCallMessage)
+
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

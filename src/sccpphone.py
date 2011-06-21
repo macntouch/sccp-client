@@ -100,9 +100,9 @@ class SCCPPhone():
     def onCallState(self,message):
         self.log('call state line : ' + `message.line` + ' for callId '+ `message.callId` + ' is ' + SCCPCallState.sccp_channelstates[message.callState])
         self.callStateHandler.handleCall(message.line,message.callId,message.callState)
-#        self.currentLine = message.line
-#        self.currentCallId=message.callId
-#        self.callState=message.callState
+        self.currentLine = message.line
+        self.currentCallId=message.callId
+        self.callState=message.callState
 
     def onStartTone(self,message):
         self.log('start tone : '+`message.tone` + ' timeout ' + `message.toneTimeout` + ' line ' + `message.line` + ' for callId '+ `message.callId`)
@@ -126,3 +126,12 @@ class SCCPPhone():
         self.client.sendSccpMessage(SCCPSoftKeyEvent(SKINNY_LBL_NEWCALL))
         for digit in numberToDial:
             self.onDialPadButtonPushed(digit)
+            
+    def onSoftKey(self,event):
+        self.log('on soft key '+`event`)
+        if (event != SKINNY_LBL_NEWCALL):
+            message = SCCPSoftKeyEvent(event,self.currentLine,self.currentCallId)
+        else:
+            message = SCCPSoftKeyEvent(event)
+        self.client.sendSccpMessage(message)
+

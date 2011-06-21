@@ -10,13 +10,9 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from struct import pack
 
-from sccp.sccpmessage import SCCPMessage
-from sccp.sccpmessagetype import SCCPMessageType
 from gui.connectindicator import ConnectIndicator
 from gui.dialpad import DialPad
 from gui.softkeys import SoftKeys
-from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
-from sccp.sccpkeypadbutton import SCCPKeyPadButton
 from gui.calldisplay import CallDisplay
 from sccpphone import SCCPPhone
 
@@ -68,9 +64,8 @@ class SCCPClientWindow(QMainWindow):
         hbox.addWidget(self.circle_widget)
         self.callDisplay = CallDisplay()
         hbox.addLayout(self.callDisplay)
-        softKeys = SoftKeys()
-        softKeys.connectSoftKeys(self.onSoftKey)
-        hbox.addLayout(softKeys)
+        self.softKeys = SoftKeys()
+        hbox.addLayout(self.softKeys)
         
         self.dialPad = DialPad()
         
@@ -103,10 +98,6 @@ class SCCPClientWindow(QMainWindow):
         self.circle_timer.timeout.connect(self.circle_widget.next)
         self.circle_timer.start(25)
     
-    def create_keepalive_timer(self):
-        self.circle_timer = QTimer(self)
-        self.circle_timer.timeout.connect(self.circle_widget.next)
-        self.circle_timer.start(25)
         
     def create_client(self):
         serverHost = str(self.hostEdit.text())
@@ -116,8 +107,10 @@ class SCCPClientWindow(QMainWindow):
         self.sccpPhone.setTimerProvider(self)
         self.sccpPhone.setDateTimePicker(self)
         self.sccpPhone.setCallStateHandler(self)
-        self.dialPad.connectPad(self.sccpPhone)
         
+        self.dialPad.connectPad(self.sccpPhone)
+        self.softKeys.connectSoftKeys(self.sccpPhone.onSoftKey)
+
         self.client = self.sccpPhone.createClient()        
         
     
@@ -154,13 +147,6 @@ class SCCPClientWindow(QMainWindow):
         self.log("close event")
         self.reactor.stop()
         
-    def onSoftKey(self,event):
-        self.log('on soft key '+`event`)
-        if (event != 2):
-            message = SCCPSoftKeyEvent(event,self.currentLine,self.currentCallId)
-        else:
-            message = SCCPSoftKeyEvent(event)
-        self.client.send_msg(message.pack())
 
 #-------------------------------------------------------------------------------
 if __name__ == "__main__":
