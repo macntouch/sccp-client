@@ -8,27 +8,17 @@ This code is in the public domain
 import sys, time
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from struct import pack
 
 from gui.connectindicator import ConnectIndicator
 from gui.dialpad import DialPad
 from gui.softkeys import SoftKeys
 from gui.calldisplay import CallDisplay
 from sccpphone import SCCPPhone
+from gui.logwidget import LogWidget
 
 SERVER_HOST = '192.168.30.83'
 SERVER_PORT = 2000
 DEVICE_NAME= 'SEP00164697AAAA'
-
-class LogWidget(QTextBrowser):
-    def __init__(self, parent=None):
-        super(LogWidget, self).__init__(parent)
-        palette = QPalette()
-        palette.setColor(QPalette.Base, QColor("#ddddfd"))
-        self.setPalette(palette)
-    def minimumSizeHint(self, *args, **kwargs):
-        return QSize(400,300)
-
 
 class SCCPClientWindow(QMainWindow):
     def __init__(self, reactor, parent=None):
