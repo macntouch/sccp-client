@@ -39,7 +39,7 @@ class SCCPPhone():
         self.client.addHandler(SCCPMessageType.CapabilitiesReqMessage,self.onCapabilitiesReq)
         self.client.addHandler(SCCPMessageType.KeepAliveAckMessage,self.onKeepAliveAck)
         self.client.addHandler(SCCPMessageType.DefineTimeDate,self.onDefineTimeDate)
-#        self.client.addHandler(SCCPMessageType.SetSpeakerModeMessage,self.onSetSpeakerMode)
+        self.client.addHandler(SCCPMessageType.SetSpeakerModeMessage,self.onSetSpeakerMode)
 #        self.client.addHandler(SCCPMessageType.CallStateMessage,self.onCallState)
 #        self.client.addHandler(SCCPMessageType.ActivateCallPlaneMessage,self.onActivateCallPlane)
 #        self.client.addHandler(SCCPMessageType.StartToneMessage,self.onStartTone)
@@ -86,4 +86,8 @@ class SCCPPhone():
     def onDefineTimeDate(self,message):
         self.log('define time and date')
         self.dateTimePicker.setDateTime(message.day,message.month,message.year,message.hour,message.minute,message.seconds)
+    
+    def onSetSpeakerMode(self,message):
+        self.log('set speaker mode '+`message.mode`)
+
         

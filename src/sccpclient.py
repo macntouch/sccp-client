@@ -143,8 +143,6 @@ class SCCPClientWindow(QMainWindow):
         self.timeDateLabel.setText(`day` + '-'+`month` + '-' + `year` 
                                    + ' ' +`hour`+':'+`minute`+':'+`seconds`)
 
-    def onSetSpeakerMode(self,message):
-        self.log('set speaker mode '+`message.mode`)
         
     def onCallState(self,message):
         self.log('call state line : ' + `message.line` + ' for callId '+ `message.callId` + ' is ' + SCCPCallState.sccp_channelstates[message.callState])

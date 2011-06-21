@@ -14,6 +14,7 @@ from sccpphone import SCCPPhone
 from tests.mock import Mock
 import unittest
 from sccp.sccpdefinetimedate import SCCPDefineTimeDate
+from sccp.sccpsetspeakermode import SCCPSetSpeakerMode
 
 
         
@@ -80,6 +81,9 @@ class TestSCCPPhone(unittest.TestCase):
         self.sccpPhone.setDateTimePicker(dateTimePicker)
         self.sccpPhone.onDefineTimeDate(defineDateTime)
         dateTimePicker.setDateTime.assert_called_with(21,6,2011,11,40,36)
+        
+    def testOnSetSpeakerMode(self):
+        self.sccpPhone.onSetSpeakerMode(SCCPSetSpeakerMode())
     
     
          
