@@ -26,7 +26,9 @@ class DialPad(QVBoxLayout):
    
     def createDialEditBox(self):
         editBox = QHBoxLayout()
-        self.numberEdit = QLineEdit()
+        self.numberEdit = QComboBox()
+        self.numberEdit.acceptDrops()
+        self.numberEdit.setEditable(True)
         editBox.addWidget(self.numberEdit)
         dialButton = QPushButton('Dial');
         dialButton.clicked.connect(self.onDialButton)
@@ -53,11 +55,12 @@ class DialPad(QVBoxLayout):
         button.clicked.connect(self.onDialPadButton)
 
     def onDialPadButton(self):
-        self.numberEdit.setText(str(self.numberEdit.text())+str(self.sender().text()))
+        self.numberEdit.setEditText(str(self.numberEdit.currentText())+str(self.sender().text()))
         self.padHandler.onDialPadButtonPushed(str(self.sender().text()))
         
     def onDialButton(self):
-        numberToDial = str(self.numberEdit.text())
+        numberToDial = str(self.numberEdit.currentText())
         self.padHandler.dial(numberToDial)
+        self.numberEdit.addItem(numberToDial)
         
     

@@ -100,7 +100,6 @@ class SCCPPhone():
     def onCallState(self,message):
         self.log('call state line : ' + `message.line` + ' for callId '+ `message.callId` + ' is ' + SCCPCallState.sccp_channelstates[message.callState])
         self.callStateHandler.handleCall(message.line,message.callId,message.callState)
-#        self.callDisplay.displayCall(message.line, message.callId, message.callState)
 #        self.currentLine = message.line
 #        self.currentCallId=message.callId
 #        self.callState=message.callState
