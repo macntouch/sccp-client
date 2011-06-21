@@ -8,8 +8,17 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 SKINNY_LBL_EMPTY = 0
+SKINNY_LBL_REDIAL = 1
 SKINNY_LBL_NEWCALL = 2
+SKINNY_LBL_HOLD = 3
+SKINNY_LBL_TRANSFER = 4
+SKINNY_LBL_CFWDALL = 5
+SKINNY_LBL_CFWDBUSY = 6
+SKINNY_LBL_CFWDNOANSWER = 7
+SKINNY_LBL_BACKSPACE = 8
 SKINNY_LBL_ENDCALL = 9
+SKINNY_LBL_RESUME = 10
+SKINNY_LBL_ANSWER = 11
 
 class SoftKeys(QVBoxLayout):
 
@@ -28,9 +37,9 @@ class SoftKeys(QVBoxLayout):
         textBox.addWidget(self.label1)
         self.label2 = QLabel('EndCall')
         textBox.addWidget(self.label2)
-        self.label3 = QLabel('-------')
+        self.label3 = QLabel('Answer')
         textBox.addWidget(self.label3)
-        self.label4 = QLabel('-------')
+        self.label4 = QLabel('Redial')
         textBox.addWidget(self.label4)
         self.addLayout(textBox)
         
@@ -39,8 +48,8 @@ class SoftKeys(QVBoxLayout):
         buttonBox.setAlignment(Qt.AlignCenter)
         self.createSoftKey(buttonBox,SKINNY_LBL_NEWCALL)
         self.createSoftKey(buttonBox,SKINNY_LBL_ENDCALL)
-        self.createSoftKey(buttonBox,SKINNY_LBL_EMPTY)
-        self.createSoftKey(buttonBox,SKINNY_LBL_EMPTY)
+        self.createSoftKey(buttonBox,SKINNY_LBL_ANSWER)
+        self.createSoftKey(buttonBox,SKINNY_LBL_REDIAL)
         self.addLayout(buttonBox)
                 
     def createSoftKey(self,layout,content):

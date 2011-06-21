@@ -143,13 +143,7 @@ class SCCPClientWindow(QMainWindow):
         self.currentLine = line
         self.currentCallId=callId
         self.callState=callState
-  
-    def sendKeepAlive(self):
-        self.log("sending keepalive")
-        message = SCCPMessage(SCCPMessageType.KeepAliveMessage)
-        strMessage = message.pack();
-        self.client.send_msg(strMessage)
-                
+                  
     def log(self, msg):
         timestamp = '[%010.3f]' % time.clock()
         self.log_widget.append(timestamp + ' ' + str(msg))
