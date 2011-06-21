@@ -17,6 +17,8 @@ from sccp.sccpdefinetimedate import SCCPDefineTimeDate
 from sccp.sccpsetspeakermode import SCCPSetSpeakerMode
 from sccp.sccpcallstate import SCCPCallState
 from sccp.sccpkeypadbutton import SCCPKeyPadButton
+from gui.softkeys import SKINNY_LBL_NEWCALL
+from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
 
 
         
@@ -100,29 +102,42 @@ class TestSCCPPhone(unittest.TestCase):
         
         callStateHandler.handleCall.assert_called_with(2,43,SCCPCallState.SCCP_CHANNELSTATE_RINGING)
     
-    def testOnDialNumericButtonPushed(self):
+    def testOnDialPadNumericButtonPushed(self):
         networkClient = Mock()
         self.sccpPhone.client = networkClient
         dialPadMessage = SCCPKeyPadButton(int('1'))
-        self.sccpPhone.onDialButtonPushed('1')
+        self.sccpPhone.onDialPadButtonPushed('1')
     
         networkClient.sendSccpMessage.assert_called_with(dialPadMessage)
          
-    def testOnDialHashButtonPushed(self):
+    def testOnDialPadHashButtonPushed(self):
         networkClient = Mock()
         self.sccpPhone.client = networkClient
         dialPadMessage = SCCPKeyPadButton(15)
-        self.sccpPhone.onDialButtonPushed('#')
+        self.sccpPhone.onDialPadButtonPushed('#')
     
         networkClient.sendSccpMessage.assert_called_with(dialPadMessage)
 
-    def testOnDialStarButtonPushed(self):
+    def testOnDialPadStarButtonPushed(self):
         networkClient = Mock()
         self.sccpPhone.client = networkClient
         dialPadMessage = SCCPKeyPadButton(14)
-        self.sccpPhone.onDialButtonPushed('*')
+        self.sccpPhone.onDialPadButtonPushed('*')
     
         networkClient.sendSccpMessage.assert_called_with(dialPadMessage)
+        
+        
+    def testDial(self):
+        networkClient = Mock()
+        self.sccpPhone.client = networkClient
+        
+        newCallMessage = SCCPSoftKeyEvent(SKINNY_LBL_NEWCALL)
+
+        self.sccpPhone.dial('12')
+        
+        networkClient.sendSccpMessage.assert_was_called_with(newCallMessage)
+        networkClient.sendSccpMessage.assert_was_called_with(SCCPKeyPadButton(1))
+        networkClient.sendSccpMessage.assert_was_called_with(SCCPKeyPadButton(2))
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

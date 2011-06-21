@@ -28,6 +28,9 @@ class DialPad(QVBoxLayout):
         editBox = QHBoxLayout()
         self.numberEdit = QLineEdit()
         editBox.addWidget(self.numberEdit)
+        dialButton = QPushButton('Dial');
+        dialButton.clicked.connect(self.onDialButton)
+        editBox.addWidget(dialButton)
         self.addLayout(editBox)
  
     def createButtonRange(self,start):
@@ -47,10 +50,14 @@ class DialPad(QVBoxLayout):
     def createButton(self,layout,label):
         button = QPushButton(label);
         layout.addWidget(button)
-        button.clicked.connect(self.onDialButton)
+        button.clicked.connect(self.onDialPadButton)
 
-    def onDialButton(self):
+    def onDialPadButton(self):
         self.numberEdit.setText(str(self.numberEdit.text())+str(self.sender().text()))
-        self.padHandler.onDialButtonPushed(str(self.sender().text()))
+        self.padHandler.onDialPadButtonPushed(str(self.sender().text()))
+        
+    def onDialButton(self):
+        numberToDial = str(self.numberEdit.text())
+        self.padHandler.dial(numberToDial)
         
     

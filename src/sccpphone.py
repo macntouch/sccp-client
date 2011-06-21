@@ -12,6 +12,8 @@ from sccp.sccpregisteravailablelines import SCCPRegisterAvailableLines
 from sccp.sccptimedatereq import SCCPTimeDateReq
 from sccp.sccpcallstate import SCCPCallState
 from sccp.sccpkeypadbutton import SCCPKeyPadButton
+from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
+from gui.softkeys import SKINNY_LBL_NEWCALL
 
 class SCCPPhone():
     '''
@@ -109,7 +111,7 @@ class SCCPPhone():
     def onActivateCallPlane(self,message):
         self.log('Activate call plane on line '+`message.line`)
         
-    def onDialButtonPushed(self,car):
+    def onDialPadButtonPushed(self,car):
         self.log("dialed : " + car)
         if (car == '#'):
             event = 15
@@ -119,3 +121,9 @@ class SCCPPhone():
             event = int(car)
         message = SCCPKeyPadButton(event)
         self.client.sendSccpMessage(message)
+        
+    def dial(self,numberToDial):
+        self.log('dialing : '+numberToDial)
+        self.client.sendSccpMessage(SCCPSoftKeyEvent(SKINNY_LBL_NEWCALL))
+        for digit in numberToDial:
+            self.onDialPadButtonPushed(digit)
