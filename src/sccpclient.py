@@ -121,6 +121,7 @@ class SCCPClientWindow(QMainWindow):
         self.sccpPhone = SCCPPhone(serverHost,deviceName)
         self.sccpPhone.setLogger(self.log)
         self.sccpPhone.setTimerProvider(self)
+        self.sccpPhone.setDateTimePicker(self)
         self.client = self.sccpPhone.createClient()        
         
     
@@ -138,10 +139,9 @@ class SCCPClientWindow(QMainWindow):
         self.circle_widget.connected = True
         
       
-    def onDefineTimeDate(self,message):
-        self.log('define time and date')
-        self.timeDateLabel.setText(`message.day` + '-'+`message.month` + '-' + `message.year` 
-                                   + ' ' +`message.hour`+':'+`message.minute`+':'+`message.seconds`)
+    def setDateTime(self,day,month,year,hour,minute,seconds):
+        self.timeDateLabel.setText(`day` + '-'+`month` + '-' + `year` 
+                                   + ' ' +`hour`+':'+`minute`+':'+`seconds`)
 
     def onSetSpeakerMode(self,message):
         self.log('set speaker mode '+`message.mode`)

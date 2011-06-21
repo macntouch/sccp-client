@@ -26,6 +26,9 @@ class SCCPPhone():
     def setTimerProvider(self,timerProvider):
         self.timerProvider = timerProvider
         
+    def setDateTimePicker(self,dateTimePicker):
+        self.dateTimePicker = dateTimePicker
+        
     def createClient(self):
         self.log('creating sccp client factory')
         self.client = SCCPClientFactory(
@@ -35,7 +38,7 @@ class SCCPPhone():
         self.client.addHandler(SCCPMessageType.RegisterAckMessage,self.onRegisteredAck)
         self.client.addHandler(SCCPMessageType.CapabilitiesReqMessage,self.onCapabilitiesReq)
         self.client.addHandler(SCCPMessageType.KeepAliveAckMessage,self.onKeepAliveAck)
-#        self.client.addHandler(SCCPMessageType.DefineTimeDate,self.onDefineTimeDate)
+        self.client.addHandler(SCCPMessageType.DefineTimeDate,self.onDefineTimeDate)
 #        self.client.addHandler(SCCPMessageType.SetSpeakerModeMessage,self.onSetSpeakerMode)
 #        self.client.addHandler(SCCPMessageType.CallStateMessage,self.onCallState)
 #        self.client.addHandler(SCCPMessageType.ActivateCallPlaneMessage,self.onActivateCallPlane)
@@ -80,5 +83,7 @@ class SCCPPhone():
         self.client.sendSccpMessage(SCCPTimeDateReq())
 
         
-
+    def onDefineTimeDate(self,message):
+        self.log('define time and date')
+        self.dateTimePicker.setDateTime(message.day,message.month,message.year,message.hour,message.minute,message.seconds)
         

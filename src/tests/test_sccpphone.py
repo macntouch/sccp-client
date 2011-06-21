@@ -13,6 +13,7 @@ from sccp.sccptimedatereq import SCCPTimeDateReq
 from sccpphone import SCCPPhone
 from tests.mock import Mock
 import unittest
+from sccp.sccpdefinetimedate import SCCPDefineTimeDate
 
 
         
@@ -58,14 +59,30 @@ class TestSCCPPhone(unittest.TestCase):
         networkClient = Mock()
         self.sccpPhone.client = networkClient
 
-        self.sccpPhone.OnCapabilitiesReq(SCCPCapabilitiesReq())
+        self.sccpPhone.onCapabilitiesReq(SCCPCapabilitiesReq())
        
         networkClient.sendSccpMessage.assert_was_called_with(AnyInstanceOf(SCCPCapabilitiesRes))
         networkClient.sendSccpMessage.assert_was_called_with(AnyInstanceOf(SCCPButtonTemplateReq))
         networkClient.sendSccpMessage.assert_was_called_with(AnyInstanceOf(SCCPRegisterAvailableLines))
         networkClient.sendSccpMessage.assert_was_called_with(AnyInstanceOf(SCCPTimeDateReq))
-                                                                   
+    
+    def testOnDefineTimeDate(self):
+        defineDateTime = SCCPDefineTimeDate()
+        defineDateTime.day=21
+        defineDateTime.month=6
+        defineDateTime.year=2011
+        defineDateTime.hour=11
+        defineDateTime.minute=40
+        defineDateTime.seconds=36
         
+        dateTimePicker = Mock()
+
+        self.sccpPhone.setDateTimePicker(dateTimePicker)
+        self.sccpPhone.onDefineTimeDate(defineDateTime)
+        dateTimePicker.setDateTime.assert_called_with(21,6,2011,11,40,36)
+    
+    
+         
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
