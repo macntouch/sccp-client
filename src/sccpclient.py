@@ -9,12 +9,9 @@ import sys, time
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from gui.connectindicator import ConnectIndicator
-from gui.dialpad import DialPad
-from gui.softkeys import SoftKeys
-from gui.calldisplay import CallDisplay
 from sccpphone import SCCPPhone
 from gui.logwidget import LogWidget
+from gui.phoneview import PhoneView
 
 SERVER_HOST = '192.168.30.83'
 SERVER_PORT = 2000
@@ -26,109 +23,58 @@ class SCCPClientWindow(QMainWindow):
         self.reactor = reactor
         
         self.create_main_frame()
-        #self.create_client()
         self.create_timer()
         
-        self.line = 0
-        self.callId = 0
-
-    def create_time_box(self):
-        timeBox = QHBoxLayout()
-        self.timeDateLabel = QLabel('..................')
-        timeBox.addWidget(self.timeDateLabel)
-        return timeBox        
-
+ 
     def create_main_frame(self):
 
-        self.circle_widget = ConnectIndicator()
-        self.doit_button = QPushButton('Connect !')
-        self.doit_button.clicked.connect(self.on_doit)
+        mainBox = QVBoxLayout()
+        phoneBox = QHBoxLayout()
+        self.mainPhoneView = PhoneView(SERVER_HOST,DEVICE_NAME,self.onConnect)
+        phoneBox.addLayout(self.mainPhoneView)
+        mainBox.addLayout(phoneBox)
         self.log_widget = LogWidget()
-        self.hostEdit = QLineEdit()
-        self.hostEdit.setText(SERVER_HOST)
-        self.deviceNameEdit = QLineEdit()
-        self.deviceNameEdit.setText(DEVICE_NAME)
-        
-        hbox = QVBoxLayout()
-        hbox.addLayout(self.create_time_box())
-        hbox.addWidget(self.circle_widget)
-        self.callDisplay = CallDisplay()
-        hbox.addLayout(self.callDisplay)
-        self.softKeys = SoftKeys()
-        hbox.addLayout(self.softKeys)
-        
-        self.dialPad = DialPad()
-        
-        hbox.addLayout(self.dialPad)
-        
-        self.createDeviceParameters(hbox)
-
-        hbox.addWidget(self.doit_button)
-        hbox.addWidget(self.log_widget)
-
-                
+        mainBox.addWidget(self.log_widget)
+       
         main_frame = QWidget()
-        main_frame.setLayout(hbox)
-        main_frame.setMinimumWidth(400)
+        main_frame.setLayout(mainBox)
+        main_frame.setMinimumWidth(300)
         
         self.setCentralWidget(main_frame)
         
-    def createDeviceParameters(self,layout):
-        hostLabel = QLabel("Host : ")
-        hostBox = QHBoxLayout()
-        hostBox.addWidget(hostLabel)
-        hostBox.addWidget(self.hostEdit)
-        deviceNameLabel = QLabel("Phone Set : ")
-        hostBox.addWidget(deviceNameLabel)
-        hostBox.addWidget(self.deviceNameEdit)
-        layout.addLayout(hostBox)
 
     def create_timer(self):
         self.circle_timer = QTimer(self)
-        self.circle_timer.timeout.connect(self.circle_widget.next)
+        self.circle_timer.timeout.connect(self.mainPhoneView.connectIndicator.next)
         self.circle_timer.start(25)
     
         
-    def create_client(self):
-        serverHost = str(self.hostEdit.text())
-        deviceName = str(self.deviceNameEdit.text())
-        self.sccpPhone = SCCPPhone(serverHost,deviceName)
-        self.sccpPhone.setLogger(self.log)
-        self.sccpPhone.setTimerProvider(self)
-        self.sccpPhone.setDateTimePicker(self)
-        self.sccpPhone.setCallStateHandler(self)
+    def create_client(self,serverHost,deviceName):
+        sccpPhone = SCCPPhone(serverHost,deviceName)
+        sccpPhone.setLogger(self.log)
+        sccpPhone.setTimerProvider(self)
+        sccpPhone.setDateTimePicker(self.mainPhoneView)
+        sccpPhone.setCallStateHandler(self.mainPhoneView)
         
-        self.dialPad.connectPad(self.sccpPhone)
-        self.softKeys.connectSoftKeys(self.sccpPhone.onSoftKey)
+        self.mainPhoneView.dialPad.connectPad(sccpPhone)
+        self.mainPhoneView.softKeys.connectSoftKeys(sccpPhone.onSoftKey)
 
-        self.client = self.sccpPhone.createClient()        
+        sccpPhone.createClient()
+        return sccpPhone     
         
     
-    def on_doit(self):
-        self.create_client()
-        serverHost = str(self.hostEdit.text())
+    def onConnect(self,serverHost,deviceName):
+        sccpPhone = self.create_client(serverHost,deviceName)
         self.log("trying to connect to : "+serverHost+ " on " +`SERVER_PORT`)
-        self.connection = self.reactor.connectTCP(serverHost, SERVER_PORT, self.client)
+        self.connection = self.reactor.connectTCP(serverHost, SERVER_PORT, sccpPhone.client)
 
     
     def createTimer(self,intervalSecs,timerCallback):
         self.keepalive_timer = QTimer(self)
         self.keepalive_timer.timeout.connect(timerCallback)
         self.keepalive_timer.start(intervalSecs*1000)
-        self.circle_widget.connected = True
-        
-      
-    def setDateTime(self,day,month,year,hour,minute,seconds):
-        self.timeDateLabel.setText(`day` + '-'+`month` + '-' + `year` 
-                                   + ' ' +`hour`+':'+`minute`+':'+`seconds`)
-
-        
-    def handleCall(self,line,callId,callState):
-        self.callDisplay.displayCall(line, callId, callState)
-        self.currentLine = line
-        self.currentCallId=callId
-        self.callState=callState
-                  
+        self.mainPhoneView.connectIndicator.connected = True
+    
     def log(self, msg):
         timestamp = '[%010.3f]' % time.clock()
         self.log_widget.append(timestamp + ' ' + str(msg))

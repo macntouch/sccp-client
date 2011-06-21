@@ -10,4 +10,4 @@ class LogWidget(QTextBrowser):
         palette.setColor(QPalette.Base, QColor("#ddddfd"))
         self.setPalette(palette)
     def minimumSizeHint(self, *args, **kwargs):
-        return QSize(400,300)
+        return QSize(200,300)
