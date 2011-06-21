@@ -143,13 +143,7 @@ class SCCPClientWindow(QMainWindow):
         self.currentLine = line
         self.currentCallId=callId
         self.callState=callState
-        
-    def onActivateCallPlane(self,message):
-        self.log('Activate call plane on line '+`message.line`)
-    
-    def onStartTone(self,message):
-        self.log('start tone : '+`message.tone` + ' timeout ' + `message.toneTimeout` + ' line ' + `message.line` + ' for callId '+ `message.callId`)
-        
+  
     def sendKeepAlive(self):
         self.log("sending keepalive")
         message = SCCPMessage(SCCPMessageType.KeepAliveMessage)
