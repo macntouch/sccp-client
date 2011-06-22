@@ -25,8 +25,6 @@ class PhoneView(QVBoxLayout):
  
  
     def createView(self):
-        self.connectIndicator = ConnectIndicator()
-        self.addWidget(self.connectIndicator)
         self.create_time_box()
         
         self.callDisplay = CallDisplay()
@@ -50,27 +48,24 @@ class PhoneView(QVBoxLayout):
         timeBox = QHBoxLayout()
         self.timeDateLabel = QLabel('..................')
         timeBox.addWidget(self.timeDateLabel)
+        self.connectIndicator = ConnectIndicator()
+        timeBox.addWidget(self.connectIndicator)
         self.addLayout(timeBox)        
         
         
     def createDeviceParameters(self):
-        self.hostEdit = QLineEdit()
-        self.hostEdit.setText(self.serverHost)
+        hostBox = QHBoxLayout()
+        deviceNameLabel = QLabel("Phone Set : ")
         self.deviceNameEdit = QLineEdit()
         self.deviceNameEdit.setText(self.deviceName)
-        hostLabel = QLabel("Host : ")
-        hostBox = QHBoxLayout()
-        hostBox.addWidget(hostLabel)
-        hostBox.addWidget(self.hostEdit)
-        deviceNameLabel = QLabel("Phone Set : ")
         hostBox.addWidget(deviceNameLabel)
         hostBox.addWidget(self.deviceNameEdit)
         self.addLayout(hostBox)
         
     def onConnect(self):
-        self.sccpPhone.host=str(self.hostEdit.text())
+        self.sccpPhone.host=self.serverHost
         self.sccpPhone.deviceName=str(self.deviceNameEdit.text())        
-        self.connectHandler(str(self.hostEdit.text()),str(self.deviceNameEdit.text()),self.sccpPhone.client)
+        self.connectHandler(self.sccpPhone.host,self.sccpPhone.deviceName,self.sccpPhone.client)
         
     def setDateTime(self,day,month,year,hour,minute,seconds):
         self.timeDateLabel.setText(`day` + '-'+`month` + '-' + `year` 

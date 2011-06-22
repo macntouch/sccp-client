@@ -42,15 +42,20 @@ class SoftKeys(QVBoxLayout):
        
         
     def createSoftKeyButtons(self):
+        mainBox=QVBoxLayout()
         buttonBox =QHBoxLayout()
+        mainBox.addLayout(buttonBox)
         buttonBox.setAlignment(Qt.AlignCenter)
         self.createSoftKey(buttonBox,'NewCall')
         self.createSoftKey(buttonBox,'EndCall')
         self.createSoftKey(buttonBox,'Answer')
+        buttonBox =QHBoxLayout()
+        mainBox.addLayout(buttonBox)
+        buttonBox.setAlignment(Qt.AlignCenter)        
         self.createSoftKey(buttonBox,'Redial')
         self.createSoftKey(buttonBox,'Hold')
         self.createSoftKey(buttonBox,'Transfer')
-        self.addLayout(buttonBox)
+        self.addLayout(mainBox)
                 
     def createSoftKey(self,layout,content):
         key = QPushButton(str(content))
