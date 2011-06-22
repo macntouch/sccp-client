@@ -14,6 +14,7 @@ from sccp.sccpcallstate import SCCPCallState
 from sccp.sccpkeypadbutton import SCCPKeyPadButton
 from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
 from gui.softkeys import SKINNY_LBL_NEWCALL
+from sccp.sccpmessage import SCCPMessage
 
 class SCCPPhone():
     '''
@@ -68,6 +69,8 @@ class SCCPPhone():
         
     def onKeepAliveTimer(self):
         self.log('on keep alive')
+        message = SCCPMessage(SCCPMessageType.KeepAliveMessage)
+        self.client.sendSccpMessage(message)
         
     def onUnknownMessage(self,message):
         self.log('receive unkown message ' + message.toStr())

@@ -17,7 +17,7 @@ class SCCPKeyPadButton(SCCPMessage):
         
 
     def __eq__(self,other):
-        return self.button == other.button
+        return SCCPMessage.__eq__(self, other) and self.button == other.button 
             
     def pack(self):
         strPack = SCCPMessage.pack(self)

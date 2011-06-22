@@ -13,7 +13,13 @@ class SCCPMessage:
     def __init__(self,sccpMessageType):
         self.sccpmessageType = sccpMessageType
         self.reserved=0x00
-        
+    
+    def __eq__(self,other):
+        print 'SCCPMessage__________eq'
+        if (self.__class__.__name__ != other.__class__.__name__):
+            return False
+        return self.sccpmessageType == other.sccpmessageType
+
     def pack(self):
         return struct.pack("LL",self.reserved,self.sccpmessageType)
     

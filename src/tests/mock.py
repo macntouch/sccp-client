@@ -693,8 +693,7 @@ class Mock(object):
         if self.call_args is None:
             raise AssertionError('Expected: %s\nNot called' % ((args, kwargs),))
         for xargs in self.call_args_list:
-            print xargs
-            if xargs == (args, kwargs):
+            if (args, kwargs) == xargs:
                 return
             
         raise AssertionError(
@@ -754,7 +753,7 @@ class callargs(tuple):
         else:
             other_args, other_kwargs = other_args_kwargs
 
-        return tuple(args_kwargs) == (other_args, other_kwargs)
+        return  (other_args, other_kwargs) == tuple(args_kwargs)
 
 
 def _dot_lookup(thing, comp, import_path):

@@ -19,6 +19,8 @@ from sccp.sccpcallstate import SCCPCallState
 from sccp.sccpkeypadbutton import SCCPKeyPadButton
 from gui.softkeys import SKINNY_LBL_NEWCALL, SKINNY_LBL_ANSWER
 from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
+from sccp.sccpmessagetype import SCCPMessageType
+from sccp.sccpmessage import SCCPMessage
 
 
         
@@ -62,6 +64,14 @@ class TestSCCPPhone(unittest.TestCase):
         self.sccpPhone.onRegisteredAck(registerAck)
         timerProvider.createTimer.assert_called_with(25,self.sccpPhone.onKeepAliveTimer)
         registeredHandler.onRegistered.assert_called_with()
+        
+    def testOnKeepAliveTimer(self):
+        networkClient = Mock()
+        self.sccpPhone.client = networkClient
+        keepaliveMessage = SCCPMessage(SCCPMessageType.KeepAliveMessage)
+        
+        self.sccpPhone.onKeepAliveTimer()
+        networkClient.sendSccpMessage.assert_called_with(keepaliveMessage)
         
     def testOnCapabilitesReq(self):
         networkClient = Mock()
