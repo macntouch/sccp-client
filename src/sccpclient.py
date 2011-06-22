@@ -78,7 +78,6 @@ class SCCPClientWindow(QMainWindow):
         self.keepalive_timer = QTimer(self)
         self.keepalive_timer.timeout.connect(timerCallback)
         self.keepalive_timer.start(intervalSecs*1000)
-        #self.mainPhoneView.connectIndicator.connected = True
     
     def log(self, msg):
         timestamp = '[%010.3f]' % time.clock()

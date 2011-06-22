@@ -83,10 +83,14 @@ class PhoneView(QVBoxLayout):
         self.sccpPhone = sccpPhone
         self.sccpPhone.setDateTimePicker(self)
         self.sccpPhone.setCallStateHandler(self)
+        self.sccpPhone.setRegisteredHandler(self)
         self.dialPad.connectPad(self.sccpPhone)
         self.softKeys.connectSoftKeys(self.sccpPhone.onSoftKey)
         self.sccpPhone.createClient()
+        
 
 
+    def onRegistered(self):
+        self.connectIndicator.connected = True
          
         

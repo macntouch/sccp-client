@@ -27,8 +27,12 @@ class SCCPPhone():
         
     def setLogger(self,logger):
         self.log = logger
+    
     def setTimerProvider(self,timerProvider):
         self.timerProvider = timerProvider
+    
+    def setRegisteredHandler(self,registeredHandler):
+        self.registeredHandler = registeredHandler
         
     def setDateTimePicker(self,dateTimePicker):
         self.dateTimePicker = dateTimePicker
@@ -74,6 +78,7 @@ class SCCPPhone():
         self.log("--               dateTemplate : " + `registerAck.dateTemplate`)
         self.log("-- secondaryKeepAliveInterval : " + `registerAck.secondaryKeepAliveInterval`)
         self.timerProvider.createTimer(registerAck.keepAliveInterval,self.onKeepAliveTimer)
+        self.registeredHandler.onRegistered()
 
         
     def onKeepAliveAck(self,message):

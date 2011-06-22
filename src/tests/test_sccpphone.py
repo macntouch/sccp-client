@@ -52,13 +52,16 @@ class TestSCCPPhone(unittest.TestCase):
 
 
     def testOnRegisteredAck(self):
+        registeredHandler = Mock()
         timerProvider = Mock()
         registerAck = SCCPRegisterAck()
         registerAck.keepAliveInterval=25
         
         self.sccpPhone.setTimerProvider(timerProvider)
+        self.sccpPhone.setRegisteredHandler(registeredHandler)
         self.sccpPhone.onRegisteredAck(registerAck)
         timerProvider.createTimer.assert_called_with(25,self.sccpPhone.onKeepAliveTimer)
+        registeredHandler.onRegistered.assert_called_with()
         
     def testOnCapabilitesReq(self):
         networkClient = Mock()
