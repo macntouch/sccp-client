@@ -68,7 +68,9 @@ class PhoneView(QVBoxLayout):
         self.addLayout(hostBox)
         
     def onConnect(self):
-        self.connectHandler(str(self.hostEdit.text()),str(self.deviceNameEdit.text()))
+        self.sccpPhone.host=str(self.hostEdit.text())
+        self.sccpPhone.deviceName=str(self.deviceNameEdit.text())        
+        self.connectHandler(str(self.hostEdit.text()),str(self.deviceNameEdit.text()),self.sccpPhone.client)
         
     def setDateTime(self,day,month,year,hour,minute,seconds):
         self.timeDateLabel.setText(`day` + '-'+`month` + '-' + `year` 
@@ -76,5 +78,15 @@ class PhoneView(QVBoxLayout):
         
     def handleCall(self,line,callId,callState):
         self.callDisplay.displayCall(line, callId, callState)
+        
+    def useSccpPhone(self,sccpPhone):
+        self.sccpPhone = sccpPhone
+        self.sccpPhone.setDateTimePicker(self)
+        self.sccpPhone.setCallStateHandler(self)
+        self.dialPad.connectPad(self.sccpPhone)
+        self.softKeys.connectSoftKeys(self.sccpPhone.onSoftKey)
+        self.sccpPhone.createClient()
+
+
          
         

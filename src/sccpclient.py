@@ -15,24 +15,25 @@ from gui.phoneview import PhoneView
 
 SERVER_HOST = '192.168.30.83'
 SERVER_PORT = 2000
-DEVICE_NAME= 'SEP00164697AAAA'
+DEVICE_NAME1= 'SEP00164697AAAA'
+DEVICE_NAME2= 'SEP00164697AAAB'
 
 class SCCPClientWindow(QMainWindow):
     def __init__(self, reactor, parent=None):
         super(SCCPClientWindow, self).__init__(parent)
+        self.phoneViews=[]
         self.reactor = reactor
         
         self.create_main_frame()
-        self.create_timer()
+        self.createPhones()
+        self.createIndicatorTimer()
         
  
     def create_main_frame(self):
 
         mainBox = QVBoxLayout()
-        phoneBox = QHBoxLayout()
-        self.mainPhoneView = PhoneView(SERVER_HOST,DEVICE_NAME,self.onConnect)
-        phoneBox.addLayout(self.mainPhoneView)
-        mainBox.addLayout(phoneBox)
+        self.phoneBox = QHBoxLayout()
+        mainBox.addLayout(self.phoneBox)
         self.log_widget = LogWidget()
         mainBox.addWidget(self.log_widget)
        
@@ -42,38 +43,42 @@ class SCCPClientWindow(QMainWindow):
         
         self.setCentralWidget(main_frame)
         
-
-    def create_timer(self):
-        self.circle_timer = QTimer(self)
-        self.circle_timer.timeout.connect(self.mainPhoneView.connectIndicator.next)
-        self.circle_timer.start(25)
-    
-        
-    def create_client(self,serverHost,deviceName):
-        sccpPhone = SCCPPhone(serverHost,deviceName)
+    def createPhones(self):
+        mainPhoneView = PhoneView(SERVER_HOST,DEVICE_NAME1,self.onConnect)
+        self.phoneBox.addLayout(mainPhoneView)
+        sccpPhone = SCCPPhone(SERVER_HOST,DEVICE_NAME1)
         sccpPhone.setLogger(self.log)
         sccpPhone.setTimerProvider(self)
-        sccpPhone.setDateTimePicker(self.mainPhoneView)
-        sccpPhone.setCallStateHandler(self.mainPhoneView)
+        mainPhoneView.useSccpPhone(sccpPhone)
+        self.phoneViews.append(mainPhoneView)
         
-        self.mainPhoneView.dialPad.connectPad(sccpPhone)
-        self.mainPhoneView.softKeys.connectSoftKeys(sccpPhone.onSoftKey)
-
-        sccpPhone.createClient()
-        return sccpPhone     
+        mainPhoneView = PhoneView(SERVER_HOST,DEVICE_NAME2,self.onConnect)
+        self.phoneBox.addLayout(mainPhoneView)
+        sccpPhone = SCCPPhone(SERVER_HOST,DEVICE_NAME2)
+        sccpPhone.setLogger(self.log)
+        sccpPhone.setTimerProvider(self)
+        mainPhoneView.useSccpPhone(sccpPhone)
+        self.phoneViews.append(mainPhoneView)
         
-    
-    def onConnect(self,serverHost,deviceName):
-        sccpPhone = self.create_client(serverHost,deviceName)
+    def createIndicatorTimer(self):
+        self.circle_timer = QTimer(self)
+        self.circle_timer.timeout.connect(self.onIndicatorTimer)
+        self.circle_timer.start(25)
+        
+    def onIndicatorTimer(self):
+        for phoneView in self.phoneViews:
+            phoneView.connectIndicator.next()
+            
+    def onConnect(self,serverHost,deviceName,networkClient):
         self.log("trying to connect to : "+serverHost+ " on " +`SERVER_PORT`)
-        self.connection = self.reactor.connectTCP(serverHost, SERVER_PORT, sccpPhone.client)
+        self.connection = self.reactor.connectTCP(serverHost, SERVER_PORT, networkClient)
 
     
     def createTimer(self,intervalSecs,timerCallback):
         self.keepalive_timer = QTimer(self)
         self.keepalive_timer.timeout.connect(timerCallback)
         self.keepalive_timer.start(intervalSecs*1000)
-        self.mainPhoneView.connectIndicator.connected = True
+        #self.mainPhoneView.connectIndicator.connected = True
     
     def log(self, msg):
         timestamp = '[%010.3f]' % time.clock()
