@@ -13,9 +13,12 @@ class DialPad(QVBoxLayout):
     classdocs
     '''
 
-    def __init__(self, *args, **kwargs):
-        QVBoxLayout.__init__(self, *args, **kwargs)
+    def __init__(self, showDialPad=True):
+        QVBoxLayout.__init__(self)
         self.createDialEditBox()
+        self.dialPadBox = QVBoxLayout()
+        if (showDialPad):
+            self.addLayout(self.dialPadBox)
         self.createButtonRange(1)
         self.createButtonRange(4)
         self.createButtonRange(7)
@@ -32,6 +35,7 @@ class DialPad(QVBoxLayout):
         editBox.addWidget(self.numberEdit)
         dialButton = QPushButton('Dial');
         dialButton.clicked.connect(self.onDialButton)
+        dialButton.setMaximumWidth(50)
         editBox.addWidget(dialButton)
         self.addLayout(editBox)
  
@@ -39,14 +43,14 @@ class DialPad(QVBoxLayout):
         buttonBox = QHBoxLayout()
         for i in range(3):
             self.createButton(buttonBox,str(i+start))
-        self.addLayout(buttonBox)
+        self.dialPadBox.addLayout(buttonBox)
         
     def createLastRange(self):
         buttonBox = QHBoxLayout()
         self.createButton(buttonBox, '*')
         self.createButton(buttonBox, '0')
         self.createButton(buttonBox, '#')
-        self.addLayout(buttonBox)
+        self.dialPadBox.addLayout(buttonBox)
 
         
     def createButton(self,layout,label):
@@ -62,5 +66,7 @@ class DialPad(QVBoxLayout):
         numberToDial = str(self.numberEdit.currentText())
         self.padHandler.dial(numberToDial)
         self.numberEdit.addItem(numberToDial)
+    
+        
         
     

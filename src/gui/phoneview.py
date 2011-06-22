@@ -33,7 +33,7 @@ class PhoneView(QVBoxLayout):
         self.softKeys = SoftKeys()
         self.addLayout(self.softKeys)
 
-        self.dialPad = DialPad()
+        self.dialPad = DialPad(False)
         self.addLayout(self.dialPad)
 
         self.createDeviceParameters()
