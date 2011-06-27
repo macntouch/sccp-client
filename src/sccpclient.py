@@ -28,6 +28,12 @@ class SCCPClientWindow(QMainWindow):
         self.createPhones()
         self.createIndicatorTimer()
         
+        oneTimer = QTimer(self)
+        oneTimer.setSingleShot(True)
+        oneTimer.timeout.connect(self.ontimedoit)
+        oneTimer.start(5000)
+    def ontimedoit(self):
+        self.log('I did it')
  
     def create_main_frame(self):
 
