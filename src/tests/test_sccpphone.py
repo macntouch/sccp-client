@@ -21,6 +21,7 @@ from gui.softkeys import SKINNY_LBL_NEWCALL, SKINNY_LBL_ANSWER
 from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
 from sccp.sccpmessagetype import SCCPMessageType
 from sccp.sccpmessage import SCCPMessage
+from sccp.sccplinestat import SCCPLineStat
 
 
         
@@ -180,7 +181,17 @@ class TestSCCPPhone(unittest.TestCase):
         self.sccpPhone.onSoftKey(SKINNY_LBL_ANSWER)
 
         networkClient.sendSccpMessage.assert_was_called_with(newCallMessage)
+        
+    def testOnLineStat(self):
+        lineStatMessage = SCCPLineStat()
+        lineStatMessage.line = 1
+        lineStatMessage.dirNumber = '2034'
+        displayHandler = Mock()
+        self.sccpPhone.setDisplayHandler(displayHandler)
+        
+        self.sccpPhone.onLineStat(lineStatMessage)
 
+        displayHandler.displayLineInfo.assert_called_with(1,'2034')
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

@@ -37,6 +37,9 @@ class SCCPPhone():
         
     def setDateTimePicker(self,dateTimePicker):
         self.dateTimePicker = dateTimePicker
+
+    def setDisplayHandler(self,displayHandler):
+        self.displayHandler = displayHandler
         
     def setCallStateHandler(self,callStateHandler):
         self.callStateHandler=callStateHandler
@@ -55,6 +58,7 @@ class SCCPPhone():
         self.client.addHandler(SCCPMessageType.CallStateMessage,self.onCallState)
         self.client.addHandler(SCCPMessageType.ActivateCallPlaneMessage,self.onActivateCallPlane)
         self.client.addHandler(SCCPMessageType.StartToneMessage,self.onStartTone)
+        self.client.addHandler(SCCPMessageType.LineStatMessage,self.onLineStat)
         
         return self.client
 
@@ -111,6 +115,9 @@ class SCCPPhone():
         self.currentLine = message.line
         self.currentCallId=message.callId
         self.callState=message.callState
+        
+    def onLineStat(self,message):
+        self.displayHandler.displayLineInfo(message.line,message.dirNumber)
 
     def onStartTone(self,message):
         self.log('start tone : '+`message.tone` + ' timeout ' + `message.toneTimeout` + ' line ' + `message.line` + ' for callId '+ `message.callId`)
