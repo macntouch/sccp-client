@@ -15,32 +15,32 @@ from sccp.sccpsetspeakermode import SCCPSetSpeakerMode
 from sccp.sccpcallstate import SCCPCallState
 from sccp.sccpactivatecallplane import SCCPActivateCallPlane
 from sccp.sccpstarttone import SCCPStartTone
+from sccp.sccplinestat import SCCPLineStat
 
 class MessageFactory():
     '''
     sccp message factory create message from received buffer
     '''
+    
+    messages = { 
+                SCCPMessageType.RegisterAckMessage: SCCPRegisterAck,
+                SCCPMessageType.CapabilitiesReqMessage: SCCPCapabilitiesReq,
+                SCCPMessageType.KeepAliveAckMessage: SCCPKeepAliveAck,
+                SCCPMessageType.DefineTimeDate: SCCPDefineTimeDate,
+                SCCPMessageType.SetSpeakerModeMessage: SCCPSetSpeakerMode,
+                SCCPMessageType.CallStateMessage: SCCPCallState,
+                SCCPMessageType.ActivateCallPlaneMessage: SCCPActivateCallPlane,
+                SCCPMessageType.StartToneMessage: SCCPStartTone,
+                SCCPMessageType.LineStatMessage:SCCPLineStat}
+    
     def __init__(self):
         '''
         '''
     def create(self,buffer):
         messageType = unpack("L",buffer[4:8])[0]
         msg = SCCPMessage(messageType)
-        if (messageType == SCCPMessageType.RegisterAckMessage):
-            msg = SCCPRegisterAck()
-        if (messageType == SCCPMessageType.CapabilitiesReqMessage):
-            msg = SCCPCapabilitiesReq()
-        if (messageType == SCCPMessageType.KeepAliveAckMessage):
-            msg = SCCPKeepAliveAck()
-        if (messageType ==  SCCPMessageType.DefineTimeDate):
-            msg = SCCPDefineTimeDate()
-        if (messageType == SCCPMessageType.SetSpeakerModeMessage):
-            msg = SCCPSetSpeakerMode()
-        if (messageType == SCCPMessageType.CallStateMessage):
-            msg = SCCPCallState()
-        if (messageType == SCCPMessageType.ActivateCallPlaneMessage):
-            msg = SCCPActivateCallPlane()
-        if (messageType == SCCPMessageType.StartToneMessage):
-            msg = SCCPStartTone()
+            
+        if messageType in self.messages:
+            msg = self.messages[messageType]()
     
         return msg

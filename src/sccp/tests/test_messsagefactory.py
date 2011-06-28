@@ -9,6 +9,7 @@ from sccp.sccpregisterack import SCCPRegisterAck
 from sccp.sccpcapabilitiesreq import SCCPCapabilitiesReq
 from sccp.sccpkeepaliveack import SCCPKeepAliveAck
 from sccp.sccpdefinetimedate import SCCPDefineTimeDate
+from sccp.sccplinestat import SCCPLineStat
 
 
 class TestMessageFactory(unittest.TestCase):
@@ -43,6 +44,13 @@ class TestMessageFactory(unittest.TestCase):
         msg = self.messageFactory.create(receivedBuffer)
         
         self.assertTrue(isinstance(msg, SCCPDefineTimeDate))
+        
+    def testCreateLineStat(self):
+        receivedBuffer = "\x00\x00\x00\x00\x92\x00\x00\x00\x00\x0b\x00\x00"
+        msg = self.messageFactory.create(receivedBuffer)
+        
+        self.assertTrue(isinstance(msg, SCCPLineStat))
+        
 
     def testCreateUnkownType(self):
         receivedBuffer = "\x00\x00\x00\x00\xFF\xFF\x00\x00\x00\x0b\x00\x00"
