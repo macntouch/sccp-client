@@ -6,6 +6,7 @@ Created on Jun 28, 2011
 import unittest
 from actors.callactor import CallActor
 from tests.mock import Mock
+from sccp.sccpcallstate import SCCPCallState
 
 
 class Test(unittest.TestCase):
@@ -16,12 +17,11 @@ class Test(unittest.TestCase):
         self.sccpPhone = Mock()
         self.callActor.setPhone(self.sccpPhone)
 
-
-    def testOnNewCall(self):
         
-        self.callActor.onNewCall()
-        
-        self.sccpPhone.answerCall.assert_called_with()
+    def testOnCallRinging(self):
+        self.callActor.handleCall(1,34,SCCPCallState.SCCP_CHANNELSTATE_RINGING)
+        self.callActor.handleCall(1,34,SCCPCallState.SCCP_CHANNELSTATE_OFFHOOK)
+        self.sccpPhone.answerCall.assert_called_once_with()
 
 
 if __name__ == "__main__":

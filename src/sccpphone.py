@@ -13,7 +13,7 @@ from sccp.sccptimedatereq import SCCPTimeDateReq
 from sccp.sccpcallstate import SCCPCallState
 from sccp.sccpkeypadbutton import SCCPKeyPadButton
 from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
-from gui.softkeys import SKINNY_LBL_NEWCALL
+from gui.softkeys import SKINNY_LBL_NEWCALL, SKINNY_LBL_ANSWER
 from sccp.sccpmessage import SCCPMessage
 from sccp.sccplinestatreq import SCCPLineStatReq
 
@@ -115,12 +115,12 @@ class SCCPPhone():
 
     def onCallState(self,message):
         self.log('call state line : ' + `message.line` + ' for callId '+ `message.callId` + ' is ' + SCCPCallState.sccp_channelstates[message.callState])
-        
-        for callHandler in self.callHandlers:
-            callHandler.handleCall(message.line,message.callId,message.callState)
         self.currentLine = message.line
         self.currentCallId=message.callId
         self.callState=message.callState
+        
+        for callHandler in self.callHandlers:
+            callHandler.handleCall(message.line,message.callId,message.callState)
         
     def onLineStat(self,message):
         self.log('line stat ' + `message.line` + ' : ' + `message.dirNumber`)
@@ -156,4 +156,6 @@ class SCCPPhone():
         else:
             message = SCCPSoftKeyEvent(event)
         self.client.sendSccpMessage(message)
-
+        
+    def answerCall(self):
+        self.onSoftKey(SKINNY_LBL_ANSWER)

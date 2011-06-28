@@ -171,9 +171,7 @@ class TestSCCPPhone(unittest.TestCase):
 
     def testOnSoftKeyAnswerCall(self):
         networkClient = Mock()
-        callStateHandler = Mock()
         self.sccpPhone.client = networkClient
-        self.sccpPhone.addCallHandler(callStateHandler)
         
         callState = SCCPCallState()
         callState.callId=43
@@ -182,11 +180,11 @@ class TestSCCPPhone(unittest.TestCase):
         
         self.sccpPhone.onCallState(callState)
 
-        newCallMessage = SCCPSoftKeyEvent(SKINNY_LBL_ANSWER,2,43)
+        answerCallMessage = SCCPSoftKeyEvent(SKINNY_LBL_ANSWER,2,43)
         
         self.sccpPhone.onSoftKey(SKINNY_LBL_ANSWER)
 
-        networkClient.sendSccpMessage.assert_was_called_with(newCallMessage)
+        networkClient.sendSccpMessage.assert_was_called_with(answerCallMessage)
         
     def testOnLineStat(self):
         lineStatMessage = SCCPLineStat()
@@ -198,6 +196,26 @@ class TestSCCPPhone(unittest.TestCase):
         self.sccpPhone.onLineStat(lineStatMessage)
 
         displayHandler.displayLineInfo.assert_called_with(1,'2034')
+        
+    
+    def testAnswerCall(self):
+        networkClient = Mock()
+        self.sccpPhone.client = networkClient
+
+        callState = SCCPCallState()
+        callState.callId=43
+        callState.line=2
+        callState.callState=SCCPCallState.SCCP_CHANNELSTATE_RINGING
+        
+        self.sccpPhone.onCallState(callState)
+
+        answerCallMessage = SCCPSoftKeyEvent(SKINNY_LBL_ANSWER,2,43)
+
+        
+        self.sccpPhone.answerCall()
+
+        networkClient.sendSccpMessage.assert_was_called_with(answerCallMessage)
+
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

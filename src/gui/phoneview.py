@@ -9,6 +9,7 @@ from gui.connectindicator import ConnectIndicator
 from gui.calldisplay import CallDisplay
 from gui.softkeys import SoftKeys
 from gui.dialpad import DialPad
+from actors.callactor import CallActor
 
 class PhoneView(QVBoxLayout):
     '''
@@ -85,6 +86,9 @@ class PhoneView(QVBoxLayout):
         self.sccpPhone.setDateTimePicker(self)
         self.sccpPhone.setDisplayHandler(self)
         self.sccpPhone.addCallHandler(self)
+        callActor = CallActor()
+        callActor.setPhone(self.sccpPhone)
+        self.sccpPhone.addCallHandler(callActor)
         self.sccpPhone.setRegisteredHandler(self)
         self.dialPad.connectPad(self.sccpPhone)
         self.softKeys.connectSoftKeys(self.sccpPhone.onSoftKey)
