@@ -22,6 +22,7 @@ from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
 from sccp.sccpmessagetype import SCCPMessageType
 from sccp.sccpmessage import SCCPMessage
 from sccp.sccplinestat import SCCPLineStat
+from sccp.sccplinestatreq import SCCPLineStatReq
 
 
         
@@ -82,6 +83,7 @@ class TestSCCPPhone(unittest.TestCase):
        
         networkClient.sendSccpMessage.assert_was_called_with(AnyInstanceOf(SCCPCapabilitiesRes))
         networkClient.sendSccpMessage.assert_was_called_with(AnyInstanceOf(SCCPButtonTemplateReq))
+        networkClient.sendSccpMessage.assert_was_called_with(AnyInstanceOf(SCCPLineStatReq))
         networkClient.sendSccpMessage.assert_was_called_with(AnyInstanceOf(SCCPRegisterAvailableLines))
         networkClient.sendSccpMessage.assert_was_called_with(AnyInstanceOf(SCCPTimeDateReq))
     

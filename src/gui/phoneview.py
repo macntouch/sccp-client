@@ -48,8 +48,11 @@ class PhoneView(QVBoxLayout):
         timeBox = QHBoxLayout()
         self.timeDateLabel = QLabel('..................')
         timeBox.addWidget(self.timeDateLabel)
+        self.lineLabel = QLabel('---------------')
+        timeBox.addWidget(self.lineLabel)
         self.connectIndicator = ConnectIndicator()
         timeBox.addWidget(self.connectIndicator)
+
         self.addLayout(timeBox)        
         
         
@@ -71,12 +74,16 @@ class PhoneView(QVBoxLayout):
         self.timeDateLabel.setText(`day` + '-'+`month` + '-' + `year` 
                                    + ' ' +`hour`+':'+`minute`+':'+`seconds`)
         
+    def displayLineInfo(self,line,dirNumber):
+        self.lineLabel.setText(`line`+' : ' +`dirNumber`)
+        
     def handleCall(self,line,callId,callState):
         self.callDisplay.displayCall(line, callId, callState)
         
     def useSccpPhone(self,sccpPhone):
         self.sccpPhone = sccpPhone
         self.sccpPhone.setDateTimePicker(self)
+        self.sccpPhone.setDisplayHandler(self)
         self.sccpPhone.setCallStateHandler(self)
         self.sccpPhone.setRegisteredHandler(self)
         self.dialPad.connectPad(self.sccpPhone)

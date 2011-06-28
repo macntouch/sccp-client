@@ -15,6 +15,7 @@ from sccp.sccpkeypadbutton import SCCPKeyPadButton
 from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
 from gui.softkeys import SKINNY_LBL_NEWCALL
 from sccp.sccpmessage import SCCPMessage
+from sccp.sccplinestatreq import SCCPLineStatReq
 
 class SCCPPhone():
     '''
@@ -96,6 +97,8 @@ class SCCPPhone():
         self.client.sendSccpMessage(SCCPCapabilitiesRes())
         self.log("sending button template request message")
         self.client.sendSccpMessage(SCCPButtonTemplateReq())
+        self.log("sending line status request message")
+        self.client.sendSccpMessage(SCCPLineStatReq(1))
         self.log("sending register available lines")
         self.client.sendSccpMessage(SCCPRegisterAvailableLines())
         self.log("sending time date request message")
@@ -117,6 +120,7 @@ class SCCPPhone():
         self.callState=message.callState
         
     def onLineStat(self,message):
+        self.log('line stat ' + `message.line` + ' : ' + `message.dirNumber`)
         self.displayHandler.displayLineInfo(message.line,message.dirNumber)
 
     def onStartTone(self,message):
