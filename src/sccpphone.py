@@ -26,6 +26,7 @@ class SCCPPhone():
     def __init__(self,host,deviceName):
         self.host = host
         self.deviceName = deviceName
+        self.callHandlers = set()
         
     def setLogger(self,logger):
         self.log = logger
@@ -42,8 +43,8 @@ class SCCPPhone():
     def setDisplayHandler(self,displayHandler):
         self.displayHandler = displayHandler
         
-    def setCallStateHandler(self,callStateHandler):
-        self.callStateHandler=callStateHandler
+    def addCallHandler(self,callHandler):
+        self.callHandlers.add(callHandler)
         
     def createClient(self):
         self.log('creating sccp client factory')
@@ -114,7 +115,9 @@ class SCCPPhone():
 
     def onCallState(self,message):
         self.log('call state line : ' + `message.line` + ' for callId '+ `message.callId` + ' is ' + SCCPCallState.sccp_channelstates[message.callState])
-        self.callStateHandler.handleCall(message.line,message.callId,message.callState)
+        
+        for callHandler in self.callHandlers:
+            callHandler.handleCall(message.line,message.callId,message.callState)
         self.currentLine = message.line
         self.currentCallId=message.callId
         self.callState=message.callState

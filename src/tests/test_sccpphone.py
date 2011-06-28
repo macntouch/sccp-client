@@ -106,9 +106,12 @@ class TestSCCPPhone(unittest.TestCase):
         self.sccpPhone.onSetSpeakerMode(SCCPSetSpeakerMode())
         
     def testOnCallState(self):
-        callStateHandler = Mock()
-        self.sccpPhone.setCallStateHandler(callStateHandler)
+        callHandler1 = Mock()
+        self.sccpPhone.addCallHandler(callHandler1)
         
+        callHandler2 = Mock()
+        self.sccpPhone.addCallHandler(callHandler2)
+
         callState = SCCPCallState()
         callState.callId=43
         callState.line=2
@@ -116,7 +119,8 @@ class TestSCCPPhone(unittest.TestCase):
         
         self.sccpPhone.onCallState(callState)
         
-        callStateHandler.handleCall.assert_called_with(2,43,SCCPCallState.SCCP_CHANNELSTATE_RINGING)
+        callHandler1.handleCall.assert_called_with(2,43,SCCPCallState.SCCP_CHANNELSTATE_RINGING)
+        callHandler2.handleCall.assert_called_with(2,43,SCCPCallState.SCCP_CHANNELSTATE_RINGING)
     
     def testOnDialPadNumericButtonPushed(self):
         networkClient = Mock()
@@ -169,7 +173,7 @@ class TestSCCPPhone(unittest.TestCase):
         networkClient = Mock()
         callStateHandler = Mock()
         self.sccpPhone.client = networkClient
-        self.sccpPhone.setCallStateHandler(callStateHandler)
+        self.sccpPhone.addCallHandler(callStateHandler)
         
         callState = SCCPCallState()
         callState.callId=43

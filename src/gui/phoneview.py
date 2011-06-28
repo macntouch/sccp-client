@@ -84,7 +84,7 @@ class PhoneView(QVBoxLayout):
         self.sccpPhone = sccpPhone
         self.sccpPhone.setDateTimePicker(self)
         self.sccpPhone.setDisplayHandler(self)
-        self.sccpPhone.setCallStateHandler(self)
+        self.sccpPhone.addCallHandler(self)
         self.sccpPhone.setRegisteredHandler(self)
         self.dialPad.connectPad(self.sccpPhone)
         self.softKeys.connectSoftKeys(self.sccpPhone.onSoftKey)
