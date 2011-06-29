@@ -700,6 +700,9 @@ class Mock(object):
             'Expected: %s\nCalled with: %s' % ((args, kwargs), self.call_args)
         )
 
+    def assert_never_called(self, *args, **kwargs):
+        if self.call_args is not None:
+            raise AssertionError('Expected: %s\nShould Never be called' % ((args, kwargs),))
 
     def assert_called_once_with(self, *args, **kwargs):
         """

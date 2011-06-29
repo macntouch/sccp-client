@@ -13,6 +13,7 @@ from sccpphone import SCCPPhone
 from gui.logwidget import LogWidget
 from gui.phoneview import PhoneView
 from actors.callactor import CallActor
+from gui.ActorView import ActorView
 
 SERVER_HOST = '192.168.30.83'
 SERVER_PORT = 2000
@@ -49,12 +50,18 @@ class SCCPClientWindow(QMainWindow):
         self.createPhone(DEVICE_NAME2)
                 
     def createPhone(self,deviceName):
+        
+        
         mainPhoneView = PhoneView(SERVER_HOST,deviceName,self.onConnect)
         self.phoneBox.addLayout(mainPhoneView)
+
+        callActor = CallActor()
+        actorView = ActorView(callActor)
+        mainPhoneView.addLayout(actorView)
+
         sccpPhone = SCCPPhone(SERVER_HOST,deviceName)
         sccpPhone.setLogger(self.log)
         sccpPhone.setTimerProvider(self)
-        callActor = CallActor()
         callActor.setPhone(sccpPhone)
         callActor.setTimerProvider(self)
         sccpPhone.addCallHandler(callActor)

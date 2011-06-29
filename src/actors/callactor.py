@@ -11,6 +11,8 @@ class CallActor():
     
     callDurationMin = 2
     callDurationMax = 10
+    autoAnswer = False
+    
     
     def setPhone(self,phone):
         self.phone = phone
@@ -18,9 +20,16 @@ class CallActor():
     def setTimerProvider(self,timerProvider):
         self.timerProvider = timerProvider
         
+    def getAutoAnswer(self):
+        return self.autoAnswer
+    
+    def setAutoAnswer(self,autoAnswer):
+        self.autoAnswer = autoAnswer
         
                 
     def handleCall(self,line,callid,callState):
+        if not self.autoAnswer:
+            return
         if callState == SCCPCallState.SCCP_CHANNELSTATE_RINGING:
             self.phone.answerCall()
         if callState == SCCPCallState.SCCP_CHANNELSTATE_CONNECTED:

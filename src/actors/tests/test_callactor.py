@@ -18,6 +18,7 @@ class Test(unittest.TestCase):
         self.callActor.setPhone(self.sccpPhone)
         self.timerProvider = Mock()
         self.callActor.setTimerProvider(self.timerProvider)
+        self.callActor.setAutoAnswer(True)
 
         
     def testOnCallRinging(self):
@@ -40,6 +41,10 @@ class Test(unittest.TestCase):
         self.sccpPhone.endCall.assert_called_once_with()
         
 
+    def testAutoAnswer(self):
+        self.callActor.setAutoAnswer(False)
+        self.callActor.handleCall(1,34,SCCPCallState.SCCP_CHANNELSTATE_RINGING)
+        self.sccpPhone.answerCall.assert_never_called()
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

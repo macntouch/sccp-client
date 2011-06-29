@@ -9,7 +9,6 @@ from gui.connectindicator import ConnectIndicator
 from gui.calldisplay import CallDisplay
 from gui.softkeys import SoftKeys
 from gui.dialpad import DialPad
-from actors.callactor import CallActor
 
 class PhoneView(QVBoxLayout):
     '''
