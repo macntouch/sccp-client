@@ -40,9 +40,9 @@ class SCCPRegister(SCCPMessage):
         
     def pack(self):
         strPack = SCCPMessage.pack(self) + self.deviceName + "\x00"
-        strPack = strPack + pack("LL",self.stationUserId,self.stationInstance)
+        strPack = strPack + pack("II",self.stationUserId,self.stationInstance)
         strPack = strPack + self.ipAddress.pack()
-        strPack = strPack + pack("LLL",self.deviceType,self.maxStreams,0)
+        strPack = strPack + pack("III",self.deviceType,self.maxStreams,0)
         strPack = strPack + '\x0B'+ '\x00'+ '\x60'+ '\x85'
-        strPack = strPack + pack('LLLL',0,0,0,0)
+        strPack = strPack + pack('IIII',0,0,0,0)
         return strPack
