@@ -8,7 +8,8 @@ from network.sccpclientfactory import SCCPClientFactory
 from sccp.sccpmessagetype import SCCPMessageType
 from sccp.sccpregisterack import SCCPRegisterAck
 from sccp.sccpmessage import SCCPMessage
-from mock import Mock
+from tests.mock import Mock
+
 
 
 class TestSCCPClientFactory(unittest.TestCase):
