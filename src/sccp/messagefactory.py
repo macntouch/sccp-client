@@ -37,7 +37,8 @@ class MessageFactory():
         '''
         '''
     def create(self,buffer):
-        messageType = unpack("L",buffer[4:8])[0]
+        print len(buffer)
+        messageType = unpack("I",buffer[4:8])[0]
         msg = SCCPMessage(messageType)
             
         if messageType in self.messages:
