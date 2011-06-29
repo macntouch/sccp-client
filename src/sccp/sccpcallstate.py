@@ -73,7 +73,7 @@ class SCCPCallState(SCCPMessage):
         
         
     def unPack(self,buffer):
-        datas = unpack("LLL",buffer[:12])
+        datas = unpack("III",buffer[:12])
         self.callState = datas[0]
         self.line =datas[1]
         self.callId =datas[2]
