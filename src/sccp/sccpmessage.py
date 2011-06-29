@@ -20,7 +20,7 @@ class SCCPMessage:
         return self.sccpmessageType == other.sccpmessageType
 
     def pack(self):
-        return struct.pack("LL",self.reserved,self.sccpmessageType)
+        return struct.pack("II",self.reserved,self.sccpmessageType)
     
     def unPack(self,buffer):
         self.buffer = buffer

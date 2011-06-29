@@ -18,6 +18,6 @@ class SCCPLineStat(SCCPMessage):
         
         
     def unPack(self,buffer):
-        self.line = unpack("L",buffer[:4])[0]
+        self.line = unpack("I",buffer[:4])[0]
         self.dirNumber = buffer[4:].split("\x00")[0]
 

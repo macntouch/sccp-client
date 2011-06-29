@@ -32,7 +32,7 @@ class SCCPSoftKeyEvent(SCCPMessage):
         
     def pack(self):
         strPack = SCCPMessage.pack(self)
-        strPack = strPack + pack("L",self.event)
-        strPack = strPack + pack("L",self.line)
-        strPack = strPack + pack("L",self.callId)
+        strPack = strPack + pack("I",self.event)
+        strPack = strPack + pack("I",self.line)
+        strPack = strPack + pack("I",self.callId)
         return strPack

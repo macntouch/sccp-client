@@ -25,12 +25,12 @@ class SCCPDefineTimeDate(SCCPMessage):
         
 
     def unPack(self,buffer):
-        self.year = unpack("L",buffer[:4])[0]
-        self.month = unpack("L",buffer[4:8])[0]
-        self.dayOfWeek = unpack("L",buffer[8:12])[0]
-        self.day = unpack("L",buffer[12:16])[0]
-        self.hour=unpack("L",buffer[16:20])[0]
-        self.minute=unpack("L",buffer[20:24])[0]
-        self.seconds=unpack("L",buffer[24:28])[0]
-        self.milliseconds=unpack("L",buffer[28:32])[0]
-        self.timestamp=unpack("L",buffer[32:36])[0]
+        self.year = unpack("I",buffer[:4])[0]
+        self.month = unpack("I",buffer[4:8])[0]
+        self.dayOfWeek = unpack("I",buffer[8:12])[0]
+        self.day = unpack("I",buffer[12:16])[0]
+        self.hour=unpack("I",buffer[16:20])[0]
+        self.minute=unpack("I",buffer[20:24])[0]
+        self.seconds=unpack("I",buffer[24:28])[0]
+        self.milliseconds=unpack("I",buffer[28:32])[0]
+        self.timestamp=unpack("I",buffer[32:36])[0]

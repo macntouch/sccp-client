@@ -19,7 +19,7 @@ class SCCPRegisterAck(SCCPMessage):
         
         
     def unPack(self,buffer):
-        self.keepAliveInterval = unpack("L",buffer[:4])[0]
+        self.keepAliveInterval = unpack("I",buffer[:4])[0]
         self.dateTemplate = buffer[4:].split("\x00")[0]
         endDateTemplate =  buffer[4:].find("\x00")
         
