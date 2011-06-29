@@ -24,7 +24,7 @@ class Test(unittest.TestCase):
 
     def testPack(self):
         
-        registerPack = pack('L',0)
+        registerPack = pack('I',0)
         registerPack = registerPack + pack('I',SCCPMessageType.RegisterMessage)
         registerPack = registerPack + "SEP00164697AAAA"+"\x00"
         registerPack = registerPack + pack('II',0,1)
