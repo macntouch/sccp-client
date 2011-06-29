@@ -25,13 +25,13 @@ class Test(unittest.TestCase):
     def testPack(self):
         
         registerPack = pack('L',0)
-        registerPack = registerPack + pack('L',SCCPMessageType.RegisterMessage)
+        registerPack = registerPack + pack('I',SCCPMessageType.RegisterMessage)
         registerPack = registerPack + "SEP00164697AAAA"+"\x00"
-        registerPack = registerPack + pack('LL',0,1)
+        registerPack = registerPack + pack('II',0,1)
         registerPack = registerPack + pack('BBBB',192,168,1,2)
-        registerPack = registerPack + pack('LLL',8,0,0)
+        registerPack = registerPack + pack('III',8,0,0)
         registerPack = registerPack + '\x0B'+ '\x00'+ '\x60'+ '\x85'
-        registerPack = registerPack + pack('LLLL',0,0,0,0)
+        registerPack = registerPack + pack('IIII',0,0,0,0)
 
         self.assertEquals(registerPack,self.sccpRegister.pack())
 

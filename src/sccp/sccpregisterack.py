@@ -24,6 +24,6 @@ class SCCPRegisterAck(SCCPMessage):
         endDateTemplate =  buffer[4:].find("\x00")
         
         bufferLeft = buffer[4+endDateTemplate+3:]
-        self.secondaryKeepAliveInterval = unpack("L",bufferLeft[:4])[0]
+        self.secondaryKeepAliveInterval = unpack("I",bufferLeft[:4])[0]
 
 
