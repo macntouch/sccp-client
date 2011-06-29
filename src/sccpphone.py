@@ -13,7 +13,8 @@ from sccp.sccptimedatereq import SCCPTimeDateReq
 from sccp.sccpcallstate import SCCPCallState
 from sccp.sccpkeypadbutton import SCCPKeyPadButton
 from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
-from gui.softkeys import SKINNY_LBL_NEWCALL, SKINNY_LBL_ANSWER
+from gui.softkeys import SKINNY_LBL_NEWCALL, SKINNY_LBL_ANSWER,\
+    SKINNY_LBL_ENDCALL
 from sccp.sccpmessage import SCCPMessage
 from sccp.sccplinestatreq import SCCPLineStatReq
 
@@ -44,6 +45,7 @@ class SCCPPhone():
         self.displayHandler = displayHandler
         
     def addCallHandler(self,callHandler):
+        self.log(self.deviceName + ' adding call handler')
         self.callHandlers.add(callHandler)
         
     def createClient(self):
@@ -159,3 +161,6 @@ class SCCPPhone():
         
     def answerCall(self):
         self.onSoftKey(SKINNY_LBL_ANSWER)
+        
+    def endCall(self):
+        self.onSoftKey(SKINNY_LBL_ENDCALL)

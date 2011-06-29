@@ -17,7 +17,8 @@ from sccp.sccpdefinetimedate import SCCPDefineTimeDate
 from sccp.sccpsetspeakermode import SCCPSetSpeakerMode
 from sccp.sccpcallstate import SCCPCallState
 from sccp.sccpkeypadbutton import SCCPKeyPadButton
-from gui.softkeys import SKINNY_LBL_NEWCALL, SKINNY_LBL_ANSWER
+from gui.softkeys import SKINNY_LBL_NEWCALL, SKINNY_LBL_ANSWER,\
+    SKINNY_LBL_ENDCALL
 from sccp.sccpsoftkeyevent import SCCPSoftKeyEvent
 from sccp.sccpmessagetype import SCCPMessageType
 from sccp.sccpmessage import SCCPMessage
@@ -215,6 +216,26 @@ class TestSCCPPhone(unittest.TestCase):
         self.sccpPhone.answerCall()
 
         networkClient.sendSccpMessage.assert_was_called_with(answerCallMessage)
+        
+        
+    def testHangupCall(self):
+        networkClient = Mock()
+        self.sccpPhone.client = networkClient
+
+        callState = SCCPCallState()
+        callState.callId=43
+        callState.line=2
+        callState.callState=SCCPCallState.SCCP_CHANNELSTATE_CONNECTED
+        
+        self.sccpPhone.onCallState(callState)
+
+        endCallMessage = SCCPSoftKeyEvent(SKINNY_LBL_ENDCALL,2,43)
+
+        
+        self.sccpPhone.endCall()
+
+        networkClient.sendSccpMessage.assert_was_called_with(endCallMessage)
+        
 
 
 if __name__ == "__main__":

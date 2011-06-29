@@ -12,6 +12,7 @@ from PyQt4.QtGui import *
 from sccpphone import SCCPPhone
 from gui.logwidget import LogWidget
 from gui.phoneview import PhoneView
+from actors.callactor import CallActor
 
 SERVER_HOST = '192.168.30.83'
 SERVER_PORT = 2000
@@ -44,21 +45,31 @@ class SCCPClientWindow(QMainWindow):
         self.setCentralWidget(main_frame)
         
     def createPhones(self):
-        mainPhoneView = PhoneView(SERVER_HOST,DEVICE_NAME1,self.onConnect)
+        self.createPhone(DEVICE_NAME1)
+        self.createPhone(DEVICE_NAME2)
+                
+    def createPhone(self,deviceName):
+        mainPhoneView = PhoneView(SERVER_HOST,deviceName,self.onConnect)
         self.phoneBox.addLayout(mainPhoneView)
-        sccpPhone = SCCPPhone(SERVER_HOST,DEVICE_NAME1)
+        sccpPhone = SCCPPhone(SERVER_HOST,deviceName)
         sccpPhone.setLogger(self.log)
         sccpPhone.setTimerProvider(self)
+        callActor = CallActor()
+        callActor.setPhone(sccpPhone)
+        callActor.setTimerProvider(self)
+        sccpPhone.addCallHandler(callActor)
+        
         mainPhoneView.useSccpPhone(sccpPhone)
         self.phoneViews.append(mainPhoneView)
         
-        mainPhoneView = PhoneView(SERVER_HOST,DEVICE_NAME2,self.onConnect)
-        self.phoneBox.addLayout(mainPhoneView)
-        sccpPhone = SCCPPhone(SERVER_HOST,DEVICE_NAME2)
-        sccpPhone.setLogger(self.log)
-        sccpPhone.setTimerProvider(self)
-        mainPhoneView.useSccpPhone(sccpPhone)
-        self.phoneViews.append(mainPhoneView)
+        
+    def createOneShotTimer(self,timerInSec,timerHandler):
+        self.log('timer request sec : ' + `timerInSec`)
+        oneTimer = QTimer(self)
+        oneTimer.setSingleShot(True)
+        oneTimer.timeout.connect(timerHandler)
+        oneTimer.start(timerInSec*1000)
+
         
     def createIndicatorTimer(self):
         self.circle_timer = QTimer(self)
