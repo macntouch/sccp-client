@@ -222,17 +222,11 @@ class TestSCCPPhone(unittest.TestCase):
         networkClient = Mock()
         self.sccpPhone.client = networkClient
 
-        callState = SCCPCallState()
-        callState.callId=43
-        callState.line=2
-        callState.callState=SCCPCallState.SCCP_CHANNELSTATE_CONNECTED
-        
-        self.sccpPhone.onCallState(callState)
 
-        endCallMessage = SCCPSoftKeyEvent(SKINNY_LBL_ENDCALL,2,43)
+        endCallMessage = SCCPSoftKeyEvent(SKINNY_LBL_ENDCALL,3,54)
 
         
-        self.sccpPhone.endCall()
+        self.sccpPhone.endCall(3,54)
 
         networkClient.sendSccpMessage.assert_was_called_with(endCallMessage)
         

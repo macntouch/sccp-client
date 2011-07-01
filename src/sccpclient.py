@@ -19,6 +19,7 @@ SERVER_HOST = '192.168.30.83'
 SERVER_PORT = 2000
 DEVICE_NAME1= 'SEP00164697AAAA'
 DEVICE_NAME2= 'SEP00164697AAAB'
+DEVICE_NAME3= 'SEP00164697AAAC'
 
 class SCCPClientWindow(QMainWindow):
     def __init__(self, reactor, parent=None):
@@ -48,6 +49,7 @@ class SCCPClientWindow(QMainWindow):
     def createPhones(self):
         self.createPhone(DEVICE_NAME1)
         self.createPhone(DEVICE_NAME2)
+        self.createPhone(DEVICE_NAME3)
                 
     def createPhone(self,deviceName):
         

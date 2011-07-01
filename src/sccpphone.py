@@ -162,5 +162,6 @@ class SCCPPhone():
     def answerCall(self):
         self.onSoftKey(SKINNY_LBL_ANSWER)
         
-    def endCall(self):
-        self.onSoftKey(SKINNY_LBL_ENDCALL)
+    def endCall(self,line,callId):
+        message = SCCPSoftKeyEvent(SKINNY_LBL_ENDCALL,line,callId)
+        self.client.sendSccpMessage(message)

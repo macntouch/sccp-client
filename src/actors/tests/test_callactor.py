@@ -27,6 +27,20 @@ class Test(unittest.TestCase):
         self.sccpPhone.answerCall.assert_called_once_with()
         
     
+    def testSecondCallRinging(self):
+        self.callActor.handleCall(1,34,SCCPCallState.SCCP_CHANNELSTATE_RINGING)
+        self.callActor.handleCall(1,38,SCCPCallState.SCCP_CHANNELSTATE_RINGING)
+        self.sccpPhone.answerCall.assert_called_once_with()
+
+    
+    def testOtherCallRingingAndGointOffHook(self):
+        self.callActor.handleCall(1,34,SCCPCallState.SCCP_CHANNELSTATE_RINGING)
+        self.callActor.handleCall(1,38,SCCPCallState.SCCP_CHANNELSTATE_RINGING)
+        self.callActor.handleCall(1,38,SCCPCallState.SCCP_CHANNELSTATE_ONHOOK)
+        self.callActor.handleCall(1,40,SCCPCallState.SCCP_CHANNELSTATE_RINGING)
+        self.sccpPhone.answerCall.assert_called_once_with()
+        
+    
     def testOnCallEstablished(self):
         
         self.callActor.handleCall(1,34,SCCPCallState.SCCP_CHANNELSTATE_CONNECTED)
@@ -36,9 +50,11 @@ class Test(unittest.TestCase):
         
         
     def testOnCallEndTimer(self):
+        self.callActor.handleCall(7,34,SCCPCallState.SCCP_CHANNELSTATE_RINGING)
+
         self.callActor.onCallEndTimer()
         
-        self.sccpPhone.endCall.assert_called_once_with()
+        self.sccpPhone.endCall.assert_called_once_with(7,34)
         
 
     def testAutoAnswer(self):
