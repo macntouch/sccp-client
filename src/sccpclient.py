@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """ 
 Sample PyQt GUI using a Twisted-based socket client. Demonstrates how to make
 PyQt work in unison with Twisted.
