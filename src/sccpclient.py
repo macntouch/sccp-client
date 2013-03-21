@@ -8,6 +8,7 @@ This code is in the public domain
 """
 import sys
 import time
+import config
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -17,12 +18,6 @@ from gui.logwidget import LogWidget
 from gui.phoneview import PhoneView
 from actors.callactor import CallActor
 from gui.ActorView import ActorView
-
-SERVER_HOST = '192.168.30.83'
-SERVER_PORT = 2000
-DEVICE_NAME1 = 'SEP00164697AAAA'
-DEVICE_NAME2 = 'SEP00164697AAAB'
-DEVICE_NAME3 = 'SEP00164697AAAC'
 
 
 class SCCPClientWindow(QMainWindow):
@@ -51,19 +46,19 @@ class SCCPClientWindow(QMainWindow):
         self.setCentralWidget(main_frame)
 
     def createPhones(self):
-        self.createPhone(DEVICE_NAME1)
-        self.createPhone(DEVICE_NAME2)
-        self.createPhone(DEVICE_NAME3)
+        self.createPhone(config.DEVICE_NAME1)
+        self.createPhone(config.DEVICE_NAME2)
+        self.createPhone(config.DEVICE_NAME3)
 
     def createPhone(self, deviceName):
-        mainPhoneView = PhoneView(SERVER_HOST, deviceName, self.onConnect)
+        mainPhoneView = PhoneView(config.SERVER_HOST, deviceName, self.onConnect)
         self.phoneBox.addLayout(mainPhoneView)
 
         callActor = CallActor()
         actorView = ActorView(callActor)
         mainPhoneView.addLayout(actorView)
 
-        sccpPhone = SCCPPhone(SERVER_HOST, deviceName)
+        sccpPhone = SCCPPhone(config.SERVER_HOST, deviceName)
         sccpPhone.setLogger(self.log)
         sccpPhone.setTimerProvider(self)
         callActor.setPhone(sccpPhone)
@@ -90,8 +85,8 @@ class SCCPClientWindow(QMainWindow):
             phoneView.connectIndicator.next()
 
     def onConnect(self, serverHost, deviceName, networkClient):
-        self.log("trying to connect to : " + serverHost + " on " + repr(SERVER_PORT))
-        self.connection = self.reactor.connectTCP(serverHost, SERVER_PORT, networkClient)
+        self.log("trying to connect to : " + serverHost + " on " + repr(config.SERVER_PORT))
+        self.connection = self.reactor.connectTCP(serverHost, config.SERVER_PORT, networkClient)
 
     def createTimer(self, intervalSecs, timerCallback):
         self.keepalive_timer = QTimer(self)
